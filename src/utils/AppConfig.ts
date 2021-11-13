@@ -1,6 +1,6 @@
 export const AppConfig = {
   site_name: 'MomentTape',
   title: 'MomentTape',
-  description: '',
+  description: 'zz',
   locale: 'en',
 };

@@ -1,13 +1,13 @@
-import * as React from 'react';
+import React from 'react';
 
-const Header: React.FunctionComponent = () => {
-  return (
-    <header class="h-44">
-      <div class="">
+const Header = () => (
+  <div className='bg-main w-full h-60'>
+    <div className='flex'>
+      <img src='../../images/logo.svg' alt='Nextjs starter banner'></img>
 
-      </div>
-    </header>;
-  )
-};
+      <p>hello</p>
+    </div>
+  </div>
+);
 
 export default Header;
