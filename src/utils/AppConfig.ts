@@ -1,6 +1,6 @@
 export const AppConfig = {
-  site_name: 'MomentTape',
-  title: 'MomentTape',
-  description: 'zz',
+  site_name: 'Momentape',
+  title: 'Nextjs momentape',
+  description: 'Lorem ipsum, lorem inpum',
   locale: 'en',
 };
