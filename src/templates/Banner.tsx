@@ -8,9 +8,9 @@ const Banner = () => (
   <Section>
     <CTABanner
       title='Lorem ipsum dolor sit amet consectetur adipisicing elit.'
-      subtitle='Start your Free Trial.'
+      subtitle='Lorem ipsum dolor sit amet'
       button={
-        <Link href='https://creativedesignsguru.com/category/nextjs/'>
+        <Link href=''>
           <a>
             <ButtonUI>Get Started</ButtonUI>
           </a>

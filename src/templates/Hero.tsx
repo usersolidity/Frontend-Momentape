@@ -5,12 +5,11 @@ import { ButtonUI } from '../components';
 import { HeroOneButton } from '../hero/HeroOneButton';
 import { Section } from '../layout/Section';
 import { NavbarTwoColumns } from '../navigation/NavbarTwoColumns';
-import { Logo } from './Logo';
 
 const Hero = () => (
   <Background color='bg-gray-100'>
     <Section yPadding='py-6'>
-      <NavbarTwoColumns logo={<Logo xl />}>
+      {/* <NavbarTwoColumns logo={<Logo xl />}>
         <li>
           <Link href=''>
             <a>GitHub</a>
@@ -21,7 +20,7 @@ const Hero = () => (
             <a>Sign in</a>
           </Link>
         </li>
-      </NavbarTwoColumns>
+      </NavbarTwoColumns> */}
     </Section>
 
     <Section yPadding='pt-20 pb-32'>

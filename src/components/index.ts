@@ -1,5 +1,6 @@
 import ButtonUI from './ButtonUI';
 // import ImageUI from './ImageUI';
-// import Header from './Header';
+import Header from './Header';
+import Logo from './Logo';
 
-export { ButtonUI };
+export { ButtonUI, Header, Logo };
