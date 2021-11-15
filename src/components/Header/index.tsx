@@ -1,30 +1,3 @@
-// import React from 'react';
-// import Link from 'next/link';
-
-// import { Logo, SearchUI, Button } from '../../components';
-// import AppBar from '@mui/material/AppBar';
-// import Toolbar from '@mui/material/Toolbar';
-
-// const Header = () => {
-//   const userIsLoggedIn = false;
-//   const LoginBtns = (
-//     <div>
-//       <Button>login</Button>
-//       <Button>Sign up</Button>
-//     </div>
-//   );
-//   return (
-//     <AppBar position='static'>
-//       <Toolbar>
-//         <Link href='/'>
-//           <Logo class='cursor-pointer' />
-//         </Link>
-//         <SearchUI />
-//       </Toolbar>
-//     </AppBar>
-//   );
-// };
-// export default Header;
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -40,7 +13,8 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 
-import { Logo, SearchUI, Button } from '../../components';
+import { Logo, SearchUI, ButtonUI } from '../../components';
+import { VariantType } from '../ButtonUI';
 
 export default function Header() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -48,6 +22,7 @@ export default function Header() {
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const userIsLoggedIn = true;
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -128,6 +103,13 @@ export default function Header() {
     </>
   );
 
+  const LoginButtons = (
+    <>
+      <ButtonUI>login</ButtonUI>
+      <ButtonUI>Sign up</ButtonUI>
+    </>
+  );
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position='static'>
@@ -135,7 +117,7 @@ export default function Header() {
           <Logo />
           <SearchUI />
           <Box sx={{ flexGrow: 1 }} />
-          {menuItems}
+          {userIsLoggedIn ? LoginButtons : menuItems}
         </Toolbar>
       </AppBar>
       {renderMobileMenu}
