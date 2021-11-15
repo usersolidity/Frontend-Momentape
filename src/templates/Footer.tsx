@@ -85,6 +85,11 @@ const Footer = () => (
             <a>Docs</a>
           </Link>
         </li>
+        <li>
+          <Link href="https://github.com/ixartz/Next-JS-Landing-Page-momentape-Template">
+            <a>GitHub</a>
+          </Link>
+        </li>
       </CenteredFooter>
     </Section>
   </Background>
