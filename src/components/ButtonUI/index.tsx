@@ -16,12 +16,21 @@ export interface ButtonProps {
   type?: ButtonUIType;
   disabled?: boolean;
   variant?: VariantType;
+  color?: string;
 }
 
-const ButtonUI: React.FunctionComponent<ButtonProps> = ({ onClick, children, type = ButtonUIType.button, disabled = false, variant = VariantType.contained, ...props }) => {
+const ButtonUI: React.FunctionComponent<ButtonProps> = ({ onClick, children, type = ButtonUIType.button, disabled = false, variant = VariantType.contained, color = 'main-100' }) => {
+  const colorNumber: number = parseFloat(color.split('-')[1] || '100');
+  const hoverColor = `${color.split('-')[0]}-${colorNumber + 100}`;
+  console.log(hoverColor, colorNumber, 'hoverColor');
   return (
-    <button className={variant === VariantType.contained ? 'bg-main-100 hover:bg-main-200 text-white font-bold py-2 px-4 rounded' : 'bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded'}>
-      Button
+    <button
+      type={type}
+      onClick={onClick}
+      disabled={disabled}
+      className={variant === VariantType.contained ? `bg-${color} hover:bg-${hoverColor} text-white font-bold py-2 px-4 rounded` : `bg-transparent hover:bg-${color}-200 text-main-700 font-semibold hover:text-white py-2 px-4 border border-main-500 rounded`}
+    >
+      {children}
     </button>
   );
 };

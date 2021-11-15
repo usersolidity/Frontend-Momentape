@@ -104,10 +104,10 @@ export default function Header() {
   );
 
   const LoginButtons = (
-    <>
-      <ButtonUI>login</ButtonUI>
-      <ButtonUI>Sign up</ButtonUI>
-    </>
+    <div>
+      <ButtonUI variant={VariantType.outlined}>login</ButtonUI>
+      <ButtonUI color='gray-800'>Sign up</ButtonUI>
+    </div>
   );
 
   return (
