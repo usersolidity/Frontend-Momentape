@@ -31,7 +31,7 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
+  color: '#fff',
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
     // vertical padding + font size from searchIcon
@@ -51,7 +51,7 @@ export default function SearchUI() {
   return (
     <Search>
       <SearchIconWrapper>
-        <SearchIcon color='primary' />
+        <SearchIcon color='secondary' />
       </SearchIconWrapper>
       <StyledInputBase placeholder='Search…' inputProps={{ 'aria-label': 'search' }} />
     </Search>

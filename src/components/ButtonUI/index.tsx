@@ -28,7 +28,7 @@ const ButtonUI: React.FunctionComponent<ButtonProps> = ({ onClick, children, typ
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={variant === VariantType.contained ? `bg-${color} hover:bg-${hoverColor} text-white font-bold py-2 px-4 rounded` : `bg-transparent hover:bg-${color}-200 text-main-700 font-semibold hover:text-white py-2 px-4 border border-main-500 rounded mx-2`}
+      className={variant === VariantType.contained ? `bg-${color} hover:bg-${hoverColor} text-white font-bold py-2 px-4 rounded` : `bg-transparent hover:bg-${color}-200 text-main-700 font-semibold text-white py-2 px-4 border border-main-500 rounded mx-2`}
     >
       {children}
     </button>
