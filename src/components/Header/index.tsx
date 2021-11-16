@@ -103,12 +103,7 @@ export default function Header() {
     </>
   );
 
-  const LoginButtons = (
-    <div>
-      <ButtonUI variant={VariantType.outlined}>login</ButtonUI>
-      <ButtonUI color='gray-800'>Sign up</ButtonUI>
-    </div>
-  );
+  const LoginButtons = <ButtonUI variant={VariantType.outlined}>Sign in</ButtonUI>;
 
   return (
     <Box sx={{ flexGrow: 1 }}>
