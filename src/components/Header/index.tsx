@@ -47,7 +47,7 @@ export default function PrimarySearchAppBar() {
         <IconButton size='large' aria-label='show 4 new mails' color='inherit'>
           <AccountBalanceWalletIcon />
         </IconButton>
-        <p>Messages</p>
+        <p>Wallet</p>
       </MenuItem>
       <MenuItem>
         <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>
