@@ -1,9 +1,9 @@
-import { Base } from '../templates/Base';
+import { Base } from '../../templates/Base';
 
 const StreamId = () => (
   <Base>
     {' '}
-    <p>profile</p>
+    <p>stream</p>
   </Base>
 );
 
