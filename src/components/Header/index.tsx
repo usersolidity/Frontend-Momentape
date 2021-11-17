@@ -5,12 +5,11 @@ import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import Link from 'next/link';
 
 import { Logo, SearchUI, ButtonUI } from '../../components';
 import { VariantType } from '../ButtonUI';
@@ -18,6 +17,7 @@ import { VariantType } from '../ButtonUI';
 export default function Header() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [notificationsCounter, setNotificationsCounter] = React.useState<number>(13);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -56,15 +56,15 @@ export default function Header() {
     >
       <MenuItem>
         <IconButton size='large' aria-label='show 4 new mails' color='inherit'>
-          {/* <Badge badgeContent={4} color='error'> */}
-          <AccountBalanceWalletIcon />
-          {/* </Badge> */}
+          <button>
+            <AccountBalanceWalletIcon />
+          </button>
         </IconButton>
         <p>Messages</p>
       </MenuItem>
       <MenuItem>
         <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>
-          <Badge badgeContent={17} color='error'>
+          <Badge badgeContent={notificationsCounter} color='error'>
             <NotificationsIcon />
           </Badge>
         </IconButton>
@@ -86,7 +86,7 @@ export default function Header() {
           <AccountBalanceWalletIcon htmlColor='white' />
         </IconButton>
         <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>
-          <Badge badgeContent={17} color='error'>
+          <Badge badgeContent={notificationsCounter} color='error'>
             <NotificationsIcon htmlColor='white' />
           </Badge>
         </IconButton>
@@ -113,7 +113,6 @@ export default function Header() {
           <Box sx={{ flexGrow: 1 }} />
           {userIsLoggedIn ? LoginButtons : menuItems}
         </Toolbar>
-        {renderMobileMenu}
       </header>
     </div>
   );
