@@ -11,27 +11,42 @@ const Creator = () => {
   const content: IContentItemProps[] = [
     {
       title: 'example',
-      imgPath: `${router.basePath}/assets/images/photo-ship.jpg`,
+      imgPath: `${router.basePath}/assets/images/photo-2.jpg`,
       price: 1000,
     },
     {
       title: 'example',
-      imgPath: `${router.basePath}/assets/images/photo-ship.jpg`,
+      imgPath: `${router.basePath}/assets/images/photo-1.jpg`,
       price: 1000,
     },
     {
       title: 'example',
-      imgPath: `${router.basePath}/assets/images/photo-ship.jpg`,
+      imgPath: `${router.basePath}/assets/images/photo-2.jpg`,
       price: 1000,
     },
     {
       title: 'example',
-      imgPath: `${router.basePath}/assets/images/photo-ship.jpg`,
+      imgPath: `${router.basePath}/assets/images/photo-1.jpg`,
       price: 1000,
     },
     {
       title: 'example',
-      imgPath: `${router.basePath}/assets/images/photo-ship.jpg`,
+      imgPath: `${router.basePath}/assets/images/photo-1.jpg`,
+      price: 1000,
+    },
+    {
+      title: 'example',
+      imgPath: `${router.basePath}/assets/images/photo-2.jpg`,
+      price: 1000,
+    },
+    {
+      title: 'example',
+      imgPath: `${router.basePath}/assets/images/photo-1.jpg`,
+      price: 1000,
+    },
+    {
+      title: 'example',
+      imgPath: `${router.basePath}/assets/images/photo-1.jpg`,
       price: 1000,
     },
   ];
