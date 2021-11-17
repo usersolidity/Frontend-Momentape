@@ -12,7 +12,7 @@ type IVerticalFeatureRowProps = {
 };
 
 const VerticalFeatureRow: React.FunctionComponent<IVerticalFeatureRowProps> = ({ title, description, image, reverse, children }) => {
-  const verticalFeatureClass = className('mt-20', 'flex', 'flex-wrap', 'items-center', {
+  const verticalFeatureClass = className('mt-3', 'mb-6', 'flex', 'flex-wrap', 'items-center', {
     'flex-row-reverse': reverse,
   });
 

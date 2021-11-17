@@ -9,7 +9,7 @@ type IVerticalPurpleFutureRow = {
 };
 
 const VerticalPurpleFutureRow: React.FunctionComponent<IVerticalPurpleFutureRow> = ({ title, description, reverse, images, children }) => {
-  const verticalFeatureClass = className('mt-20', 'flex', 'flex-wrap', 'items-center', 'h-80', {
+  const verticalFeatureClass = className('mt-20', 'sm:mt-6', 'flex', 'flex-wrap', 'items-center', 'h-80', {
     'flex-row-reverse': reverse,
   });
 
