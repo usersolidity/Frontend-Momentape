@@ -16,6 +16,9 @@ const VerticalFeatures = () => (
     <VerticalPurpleFutureRow title='You’re an Artist' description='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse bibendum, nunc non posuere consectetur, justo erat semper enim, non hendrerit dui odio id enim.' images={['feature.svg']} reverse>
       <ButtonUI variant={VariantType.outlinedMain}>Get started as an artist</ButtonUI>
     </VerticalPurpleFutureRow>
+    <VerticalPurpleFutureRow title='You’re a Collector' description='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse bibendum, nunc non posuere consectetur, justo erat semper enim, non hendrerit dui odio id enim.' images={['feature.svg']}>
+      <ButtonUI variant={VariantType.contained}>Start collecting</ButtonUI>
+    </VerticalPurpleFutureRow>
   </Section>
 );
 
