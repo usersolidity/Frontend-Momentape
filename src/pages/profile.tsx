@@ -1,5 +1,10 @@
 import { Base } from '../templates/Base';
 
-const Profile = () => <Base />;
+const Index = () => (
+  <Base>
+    {' '}
+    <p>profile</p>
+  </Base>
+);
 
-export default Profile;
+export default Index;
