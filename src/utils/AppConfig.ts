@@ -1,6 +1,6 @@
 export const AppConfig = {
-  site_name: 'momentape',
-  title: 'Nextjs momentape',
-  description: 'momentape code for your Nextjs momentape with Tailwind CSS',
+  site_name: 'Momentape',
+  title: 'Momentape',
+  description: 'Momentape code for your Nextjs momentape with Tailwind CSS',
   locale: 'en',
 };

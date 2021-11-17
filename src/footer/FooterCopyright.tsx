@@ -1,9 +1,8 @@
 import { AppConfig } from '../utils/AppConfig';
-// import './Footer.css';
 
 const FooterCopyright = () => (
   <div className='footer-copyright'>
-    © Copyright {new Date().getFullYear()} {AppConfig.title}.
+    &#169; Copyright {new Date().getFullYear()} {AppConfig.title}.
   </div>
 );
 
