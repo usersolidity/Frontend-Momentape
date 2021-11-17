@@ -102,7 +102,7 @@ export default function Header() {
     </>
   );
 
-  const LoginButtons = <ButtonUI variant={VariantType.outlined}>Sign in</ButtonUI>;
+  const LoginButtons = <ButtonUI variant={VariantType.outlinedWhite}>Sign in</ButtonUI>;
 
   return (
     <div className='bg-main-100'>
