@@ -23,8 +23,8 @@ const VerticalPurpleFutureRow: React.FunctionComponent<IVerticalPurpleFutureRow>
         {children}
       </div>
       <div className='w-full sm:w-1/2 p-6 bg-main-100 h-96 flex justify-center align-middle'>
-        {images.map((image) => (
-          <img src={`${router.basePath}/assets/images/${image}`} alt={image} />
+        {images.map((image, index) => (
+          <img src={`${router.basePath}/assets/images/${image}`} alt={image} key={index} />
         ))}
       </div>
     </div>
