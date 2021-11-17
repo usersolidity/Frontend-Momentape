@@ -1,5 +1,6 @@
 import styles from './CreatorContent.module.css';
 import _ from 'lodash';
+import ContentItem, { IContentItemProps } from './ContentItem';
 
 type ICreatorContentProps = {
   imgPath: {
@@ -8,11 +9,12 @@ type ICreatorContentProps = {
   };
   name: string;
   ethAddress: string;
+  content: IContentItemProps[];
 };
 
-const CreatorContent: React.FunctionComponent<ICreatorContentProps> = ({ imgPath, name, ethAddress }) => {
+const CreatorContent: React.FunctionComponent<ICreatorContentProps> = ({ imgPath, name, ethAddress, content }) => {
   return (
-    <div>
+    <>
       <div className={styles.cover} style={{ backgroundImage: `url(${imgPath.cover})` }}></div>
       <div className='container'>
         <div className='flex'>
@@ -28,9 +30,12 @@ const CreatorContent: React.FunctionComponent<ICreatorContentProps> = ({ imgPath
               })}
             </span>
           </div>
+          {content.map((item, i: number) => (
+            <ContentItem imgPath={item.imgPath} title={item.title} price={item.price} key={i} />
+          ))}
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

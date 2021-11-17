@@ -15,7 +15,6 @@ const Section = (props: ISectionProps) => (
         {props.description && <div className='mt-4 text-xl md:px-20'>{props.description}</div>}
       </div>
     )}
-
     {props.children}
   </div>
 );
