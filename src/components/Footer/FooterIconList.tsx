@@ -1,5 +1,4 @@
 import { ReactNode } from 'react';
-// import './Footer.css';
 
 type IFooterIconListProps = {
   children: ReactNode;
