@@ -9,6 +9,15 @@ let theme = createTheme({
       main: '#fff',
     },
   },
+  components: {
+    MuiIcon: {
+      styleOverrides: {
+        root: {
+          color: '#fff',
+        },
+      },
+    },
+  },
 });
 
 export default theme;

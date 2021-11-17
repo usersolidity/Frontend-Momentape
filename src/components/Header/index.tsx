@@ -21,7 +21,7 @@ export default function Header() {
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-  const userIsLoggedIn = true;
+  const userIsLoggedIn = false;
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -56,9 +56,9 @@ export default function Header() {
     >
       <MenuItem>
         <IconButton size='large' aria-label='show 4 new mails' color='inherit'>
-          <Badge badgeContent={4} color='error'>
-            <MailIcon />
-          </Badge>
+          {/* <Badge badgeContent={4} color='error'> */}
+          <AccountBalanceWalletIcon />
+          {/* </Badge> */}
         </IconButton>
         <p>Messages</p>
       </MenuItem>
@@ -83,20 +83,20 @@ export default function Header() {
     <>
       <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
         <IconButton size='large' aria-label='show 4 new mails' color='inherit'>
-          <AccountBalanceWalletIcon />
+          <AccountBalanceWalletIcon htmlColor='white' />
         </IconButton>
         <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>
           <Badge badgeContent={17} color='error'>
-            <NotificationsIcon />
+            <NotificationsIcon htmlColor='white' />
           </Badge>
         </IconButton>
         <IconButton size='large' edge='end' aria-label='account of current user' aria-controls={menuId} aria-haspopup='true' onClick={handleProfileMenuOpen} color='inherit'>
-          <AccountCircle />
+          <AccountCircle htmlColor='white' />
         </IconButton>
       </Box>
       <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
         <IconButton size='large' aria-label='show more' aria-controls={mobileMenuId} aria-haspopup='true' onClick={handleMobileMenuOpen} color='inherit'>
-          <MoreIcon />
+          <MoreIcon style={{ fill: '#0072ea' }} />
         </IconButton>
       </Box>
     </>
@@ -108,7 +108,7 @@ export default function Header() {
     <div className='bg-main-100'>
       <header className='max-w-screen-lg mx-auto px-3'>
         <Toolbar>
-          <Logo class='cursor-pointer mr-3' />
+          <Logo classes='cursor-pointer mr-3 text-white' />
           <SearchUI />
           <Box sx={{ flexGrow: 1 }} />
           {userIsLoggedIn ? LoginButtons : menuItems}

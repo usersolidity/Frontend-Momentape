@@ -7,7 +7,6 @@ const Base = () => (
     <Meta title={AppConfig.title} description={AppConfig.description} />
     <Header />
     <VerticalFeatures />
-
     <Footer />
   </div>
 );
