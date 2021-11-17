@@ -20,9 +20,9 @@ export interface ButtonProps {
 }
 
 const ButtonUI: React.FunctionComponent<ButtonProps> = ({ onClick, children, type = ButtonUIType.button, disabled = false, variant = VariantType.contained }) => {
-  const buttonClass = className('text-gr', 'font-bold', 'py-2', 'px-4', 'rounded', {
+  const buttonClass = className('text-gr', 'font-bold', 'py-2', 'px-4', 'rounded', 'max-w-sm', {
     'bg-main-100 hover:bg-main-200 text-white': variant === VariantType.contained,
-    'bg-transparent text-main-100 border-main-100': variant === VariantType.outlinedMain,
+    'bg-transparent text-main-100 border border-main-100': variant === VariantType.outlinedMain,
     'bg-transparent text-white border border-gray-100': variant === VariantType.outlinedWhite,
   });
   return (
