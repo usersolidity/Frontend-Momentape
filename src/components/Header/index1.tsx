@@ -1,27 +1,27 @@
 import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
-
 import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
-import { Logo, SearchUI, ButtonUI } from '../../components';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import Link from 'next/link';
 
-export default function PrimarySearchAppBar() {
+import { Logo, SearchUI, ButtonUI } from '../../components';
+import { VariantType } from '../ButtonUI';
+
+export default function Header() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null);
   const [notificationsCounter, setNotificationsCounter] = React.useState<number>(13);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const userIsLoggedIn = false;
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -31,36 +31,11 @@ export default function PrimarySearchAppBar() {
     setMobileMoreAnchorEl(null);
   };
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
-  };
-
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
   const menuId = 'primary-search-account-menu';
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-    </Menu>
-  );
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (
@@ -81,13 +56,15 @@ export default function PrimarySearchAppBar() {
     >
       <MenuItem>
         <IconButton size='large' aria-label='show 4 new mails' color='inherit'>
-          <AccountBalanceWalletIcon />
+          <button>
+            <AccountBalanceWalletIcon />
+          </button>
         </IconButton>
         <p>Messages</p>
       </MenuItem>
       <MenuItem>
         <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>
-          <Badge badgeContent={17} color='error'>
+          <Badge badgeContent={notificationsCounter} color='error'>
             <NotificationsIcon />
           </Badge>
         </IconButton>
@@ -102,35 +79,41 @@ export default function PrimarySearchAppBar() {
     </Menu>
   );
 
+  const menuItems = (
+    <>
+      <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+        <IconButton size='large' aria-label='show 4 new mails' color='inherit'>
+          <AccountBalanceWalletIcon htmlColor='white' />
+        </IconButton>
+        <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>
+          <Badge badgeContent={notificationsCounter} color='error'>
+            <NotificationsIcon htmlColor='white' />
+          </Badge>
+        </IconButton>
+        <IconButton size='large' edge='end' aria-label='account of current user' aria-controls={menuId} aria-haspopup='true' onClick={handleProfileMenuOpen} color='inherit'>
+          <AccountCircle htmlColor='white' />
+        </IconButton>
+      </Box>
+      <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+        <IconButton size='large' aria-label='show more' aria-controls={mobileMenuId} aria-haspopup='true' onClick={handleMobileMenuOpen} color='inherit'>
+          <MoreIcon style={{ fill: '#0072ea' }} />
+        </IconButton>
+      </Box>
+    </>
+  );
+
+  const LoginButtons = <ButtonUI variant={VariantType.outlinedWhite}>Sign in</ButtonUI>;
+
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position='static'>
+    <div className='bg-main-100'>
+      <header className='max-w-screen-lg mx-auto px-3'>
         <Toolbar>
-          <Logo classes='text-main-100' />
+          <Logo classes='cursor-pointer mr-3 text-white' />
           <SearchUI />
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <IconButton size='large' aria-label='show 4 new mails' color='inherit'>
-              <AccountBalanceWalletIcon />
-            </IconButton>
-            <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>
-              <Badge badgeContent={notificationsCounter} color='error'>
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-            <IconButton size='large' edge='end' aria-label='account of current user' aria-controls={menuId} aria-haspopup='true' onClick={handleProfileMenuOpen} color='inherit'>
-              <AccountCircle />
-            </IconButton>
-          </Box>
-          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-            <IconButton size='large' aria-label='show more' aria-controls={mobileMenuId} aria-haspopup='true' onClick={handleMobileMenuOpen} color='inherit'>
-              <MoreIcon />
-            </IconButton>
-          </Box>
+          {userIsLoggedIn ? LoginButtons : menuItems}
         </Toolbar>
-      </AppBar>
-      {renderMobileMenu}
-      {renderMenu}
-    </Box>
+      </header>
+    </div>
   );
 }
