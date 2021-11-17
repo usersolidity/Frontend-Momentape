@@ -11,7 +11,7 @@ const Logo: React.FunctionComponent<ILogoProps> = ({ xl, classes }) => {
 
   return (
     <Link href='/'>
-      <div className='flex mr-4'>
+      <div className='flex mr-4 cursor-pointer'>
         <svg width='64' height='59' viewBox='0 0 64 59' fill='none' xmlns='http://www.w3.org/2000/svg' xmlnsXlink='http://www.w3.org/1999/xlink'>
           <rect width='64' height='59' fill='url(#pattern0)' />
           <defs>
