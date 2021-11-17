@@ -9,11 +9,11 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import { Logo, SearchUI } from '../../components';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import Link from 'next/link';
 
 export default function PrimarySearchAppBar() {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -23,6 +23,10 @@ export default function PrimarySearchAppBar() {
 
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setMobileMoreAnchorEl(event.currentTarget);
+  };
+
+  const handleOpenWallet = () => {
+    console.log('open wallet');
   };
 
   const menuId = 'primary-search-account-menu';
@@ -44,7 +48,7 @@ export default function PrimarySearchAppBar() {
       open={isMobileMenuOpen}
     >
       <MenuItem>
-        <IconButton size='large' aria-label='show 4 new mails' color='inherit'>
+        <IconButton size='large' aria-label='show 4 new mails' color='inherit' onClick={handleOpenWallet}>
           <AccountBalanceWalletIcon />
         </IconButton>
         <p>Wallet</p>
@@ -58,9 +62,11 @@ export default function PrimarySearchAppBar() {
         <p>Notifications</p>
       </MenuItem>
       <MenuItem>
-        <IconButton size='large' aria-label='account of current user' aria-controls='primary-search-account-menu' aria-haspopup='true' color='inherit'>
-          <AccountCircle />
-        </IconButton>
+        <Link href='/profile'>
+          <IconButton size='large' edge='end' aria-label='account of current user' aria-controls={menuId} aria-haspopup='true' color='inherit'>
+            <AccountCircle />
+          </IconButton>
+        </Link>
         <p>Profile</p>
       </MenuItem>
     </Menu>
@@ -74,7 +80,7 @@ export default function PrimarySearchAppBar() {
           <SearchUI />
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <IconButton size='large' aria-label='show 4 new mails' color='inherit'>
+            <IconButton size='large' aria-label='show 4 new mails' color='inherit' onClick={handleOpenWallet}>
               <AccountBalanceWalletIcon />
             </IconButton>
             <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>
@@ -82,9 +88,11 @@ export default function PrimarySearchAppBar() {
                 <NotificationsIcon />
               </Badge>
             </IconButton>
-            <IconButton size='large' edge='end' aria-label='account of current user' aria-controls={menuId} aria-haspopup='true' color='inherit'>
-              <AccountCircle />
-            </IconButton>
+            <Link href='/profile'>
+              <IconButton size='large' edge='end' aria-label='account of current user' aria-controls={menuId} aria-haspopup='true' color='inherit'>
+                <AccountCircle />
+              </IconButton>
+            </Link>
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton size='large' aria-label='show more' aria-controls={mobileMenuId} aria-haspopup='true' onClick={handleMobileMenuOpen} color='inherit'>
