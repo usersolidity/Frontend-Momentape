@@ -1,15 +1,18 @@
 import className from 'classnames';
 import { useRouter } from 'next/router';
 
-type IVerticalFeatureRow = {
+type IVerticalFeatureRowProps = {
   title: string;
   description: string;
+  image: {
+    path: string;
+    alt: string;
+  };
   reverse?: boolean;
-  image: string;
 };
 
-const VerticalFeatureRow: React.FunctionComponent<IVerticalFeatureRow> = ({ title, description, reverse, image, children }) => {
-  const verticalFeatureClass = className('mt-20', 'flex', 'flex-wrap', 'items-center', 'h-80', {
+const VerticalFeatureRow: React.FunctionComponent<IVerticalFeatureRowProps> = ({ title, description, image, reverse, children }) => {
+  const verticalFeatureClass = className('mt-20', 'flex', 'flex-wrap', 'items-center', {
     'flex-row-reverse': reverse,
   });
 
@@ -22,8 +25,9 @@ const VerticalFeatureRow: React.FunctionComponent<IVerticalFeatureRow> = ({ titl
         <div className='mt-6 text-xl leading-9 mb-3'>{description}</div>
         {children}
       </div>
+
       <div className='w-full sm:w-1/2 p-6'>
-        <img src={`${router.basePath}/assets/images/${image}`} alt={image} />
+        <img src={`${router.basePath}/assets/images/${image.path}`} alt={image.alt} />
       </div>
     </div>
   );
