@@ -15,7 +15,7 @@ export interface IInputProps {
 const InputBase: React.FunctionComponent<IInputProps> = ({ onChange, type = InputType.text, value, label, textArea = false }) => {
   const classes = 'mt-1 p-2 focus:ring-main-100 focus:border-main-100 block w-full shadow-sm sm:text-sm border border-gray-300 rounded-md';
   return (
-    <div className='col-span-6 sm:col-span-3'>
+    <div className='col-span-6 sm:col-span-3 mt-2'>
       <label htmlFor={label} className='block text-sm font-medium text-gray-700'>
         {label}
       </label>

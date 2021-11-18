@@ -20,12 +20,14 @@ import { Section } from '../../layout/Section';
 const Form = () => {
   const [name, setName] = React.useState<string>('');
   const [bio, setBio] = React.useState<string>('');
+  const [link, setLink] = React.useState<string>('');
 
   return (
     <Section>
       <form className='w-96 m-auto'>
         <InputBase label='Name' value={name} onChange={(value: any) => setName(value)} />
         <InputBase label='Bio' value={bio} onChange={(value: any) => setBio(value)} textArea />
+        <InputWeb label='Link' value={link} onChange={(value: any) => setLink(value)} />
       </form>
     </Section>
   );
