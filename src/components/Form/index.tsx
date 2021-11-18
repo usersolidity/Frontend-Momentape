@@ -14,7 +14,7 @@
 // import { ButtonUI } from '../../components';
 // import { VariantType } from '../ButtonUI';
 import * as React from 'react';
-import { InputWeb, InputBase } from '../../components';
+import { InputWeb, InputBase, ButtonImage, ButtonUploadFile } from '../../components';
 import { Section } from '../../layout/Section';
 
 const Form = () => {
@@ -28,6 +28,8 @@ const Form = () => {
         <InputBase label='Name' value={name} onChange={(value: any) => setName(value)} />
         <InputBase label='Bio' value={bio} onChange={(value: any) => setBio(value)} textArea />
         <InputWeb label='Link' value={link} onChange={(value: any) => setLink(value)} />
+        <ButtonImage addPicture={() => console.log('handle add pic')} />
+        <ButtonUploadFile />
       </form>
     </Section>
   );

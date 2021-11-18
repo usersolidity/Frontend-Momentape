@@ -1,10 +1,4 @@
 import * as React from 'react';
-
-enum InputType {
-  text = 'text',
-  number = 'number',
-}
-
 export interface IInputProps {
   onChange: any;
   value: any;

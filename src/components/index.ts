@@ -9,5 +9,7 @@ import InputWeb from './InputWeb';
 
 import SearchUI from './SearchUI';
 import VerticalFeatures from './VerticalFeatures';
+import ButtonImage from './ButtonImage';
+import ButtonUploadFile from './ButtonUploadFile';
 
-export { ButtonUI, Header, Logo, SearchUI, VerticalFeatures, Footer, CreatorContent, Form, InputBase, InputWeb };
+export { ButtonUI, Header, Logo, SearchUI, VerticalFeatures, Footer, CreatorContent, Form, InputBase, InputWeb, ButtonImage, ButtonUploadFile };
