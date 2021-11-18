@@ -1,7 +1,7 @@
 import * as React from 'react';
 import className from 'classnames';
 
-enum ButtonUIType {
+export enum ButtonUIType {
   button = 'button',
   submit = 'submit',
 }

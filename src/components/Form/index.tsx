@@ -14,22 +14,27 @@
 // import { ButtonUI } from '../../components';
 // import { VariantType } from '../ButtonUI';
 import * as React from 'react';
-import { InputWeb, InputBase, ButtonImage, ButtonUploadFile } from '../../components';
+import { InputWeb, InputBase, ButtonImage, ButtonUploadFile, ButtonUI } from '../../components';
 import { Section } from '../../layout/Section';
+import { ButtonUIType } from '../ButtonUI';
 
 const Form = () => {
   const [name, setName] = React.useState<string>('');
   const [bio, setBio] = React.useState<string>('');
   const [link, setLink] = React.useState<string>('');
-
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    console.log(name, bio, link);
+  };
   return (
     <Section>
-      <form className='w-96 m-auto'>
+      <form className='w-96 m-auto' onSubmit={handleSubmit}>
         <InputBase label='Name' value={name} onChange={(value: any) => setName(value)} />
         <InputBase label='Bio' value={bio} onChange={(value: any) => setBio(value)} textArea />
         <InputWeb label='Link' value={link} onChange={(value: any) => setLink(value)} />
         <ButtonImage addPicture={() => console.log('handle add pic')} />
         <ButtonUploadFile />
+        <ButtonUI type={ButtonUIType.submit}>Save</ButtonUI>
       </form>
     </Section>
   );
