@@ -3,7 +3,6 @@ import { VerticalFeatures } from '../components';
 
 const Index = () => (
   <Base>
-    {' '}
     <VerticalFeatures />
   </Base>
 );
