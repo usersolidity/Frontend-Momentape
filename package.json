@@ -17,13 +17,17 @@
     "publish-model": "node --experimental-json-modules ./scripts/publish-model.mjs"
   },
   "dependencies": {
+    "@ceramicnetwork/common": "^1.8.0",
     "@ceramicnetwork/http-client": "^1.4.4",
+    "@ceramicnetwork/stream-caip10-link": "^1.2.2",
     "@emotion/react": "^11.6.0",
     "@emotion/styled": "^11.6.0",
     "@glazed/tile-loader": "^0.1.2",
     "@mui/icons-material": "^5.1.0",
     "@mui/material": "^5.1.0",
     "@mui/styled-engine-sc": "^5.1.0",
+    "@self.id/core": "^0.1.0",
+    "@self.id/image-utils": "^0.1.0",
     "@self.id/web": "^0.1.0",
     "classnames": "^2.3.1",
     "lodash": "^4.17.21",

@@ -1,60 +1,113 @@
-import { Base } from '../templates/Base';
-import { useRouter } from 'next/router';
-import { CreatorContent } from '../components';
-import { IContentItemProps } from '../components/CreatorContent/ContentItem';
-const Creator = () => {
-  const router = useRouter();
-  const { creatorId } = router.query;
-  const profileIMG = creatorId ? `${router.basePath}/assets/images/${creatorId}-profile.jpg` : `${router.basePath}/assets/images/user.png`;
-  const name = 'Anna Sudol';
-  const ethAddress = '0xFE92A2bbA39CdF36b53Cab3C8e6cC61bE9710eF6';
-  const content: IContentItemProps[] = [
-    {
-      title: 'example',
-      imgPath: `${router.basePath}/assets/images/photo-2.jpg`,
-      price: 1000,
-    },
-    {
-      title: 'example',
-      imgPath: `${router.basePath}/assets/images/photo-1.jpg`,
-      price: 1000,
-    },
-    {
-      title: 'example',
-      imgPath: `${router.basePath}/assets/images/photo-2.jpg`,
-      price: 1000,
-    },
-    {
-      title: 'example',
-      imgPath: `${router.basePath}/assets/images/photo-1.jpg`,
-      price: 1000,
-    },
-    {
-      title: 'example',
-      imgPath: `${router.basePath}/assets/images/photo-1.jpg`,
-      price: 1000,
-    },
-    {
-      title: 'example',
-      imgPath: `${router.basePath}/assets/images/photo-2.jpg`,
-      price: 1000,
-    },
-    {
-      title: 'example',
-      imgPath: `${router.basePath}/assets/images/photo-1.jpg`,
-      price: 1000,
-    },
-    {
-      title: 'example',
-      imgPath: `${router.basePath}/assets/images/photo-1.jpg`,
-      price: 1000,
-    },
-  ];
-  return (
-    <Base>
-      <CreatorContent imgPath={{ cover: `${router.basePath}/assets/images/${creatorId}.jpg`, profile: profileIMG }} name={name} ethAddress={ethAddress} content={content} />
-    </Base>
-  );
+import { useRouter } from "next/router";
+
+import { Core } from "@self.id/core";
+import modelAliases from "../data/model.json";
+
+import { Base } from "../templates/Base";
+import { CreatorContent } from "../components";
+import { IContentItemProps } from "../components/CreatorContent/ContentItem";
+import { useEffect, useRef } from "react";
+
+export type Creator = {
+    name: string;
+    pfp: string;
+    cover: string;
+    id: string;
+};
+const core = new Core({
+    ceramic: "testnet-clay-gateway",
+    model: modelAliases,
+});
+export async function getServerSideProps(context: any) {
+    const creatorId = context.params.creatorId;
+    const DID = "did:3:" + creatorId;
+    const [cryptoAccounts, creator] = await Promise.all([
+        core.get("cryptoAccounts", DID),
+        core.get("creator", DID),
+    ]);
+    return {
+        props: {
+            creator: {
+                ...creator,
+                did: creatorId,
+            },
+            cryptoAccounts,
+        },
+    };
+}
+
+const Creator = ({
+    creator,
+    cryptoAccounts,
+}: {
+    creator: Creator;
+    cryptoAccounts: any;
+}) => {
+    // const router = useRouter();
+    console.log(cryptoAccounts);
+
+    const profileIMG = creator.pfp
+        ? creator.pfp.replace("ipfs://", "https://ipfs.infura.io/ipfs/")
+        : `https://via.placeholder.com/96x96?text=PFP+Not+Set`;
+    const coverIMG = creator.cover
+        ? creator.pfp.replace("ipfs://", "https://ipfs.infura.io/ipfs/")
+        : `https://via.placeholder.com/1000x300?text=Cover+Not+Set`;
+    const ethAddress = "0xFE92A2bbA39CdF36b53Cab3C8e6cC61bE9710eF6";
+    const content: IContentItemProps[] = [
+        {
+            title: "example",
+            imgPath: `/assets/images/photo-2.jpg`,
+            price: 1000,
+        },
+        {
+            title: "example",
+            imgPath: `/assets/images/photo-1.jpg`,
+            price: 1000,
+        },
+        {
+            title: "example",
+            imgPath: `/assets/images/photo-2.jpg`,
+            price: 1000,
+        },
+        {
+            title: "example",
+            imgPath: `/assets/images/photo-1.jpg`,
+            price: 1000,
+        },
+        {
+            title: "example",
+            imgPath: `/assets/images/photo-1.jpg`,
+            price: 1000,
+        },
+        {
+            title: "example",
+            imgPath: `/assets/images/photo-2.jpg`,
+            price: 1000,
+        },
+        {
+            title: "example",
+            imgPath: `/assets/images/photo-1.jpg`,
+            price: 1000,
+        },
+        {
+            title: "example",
+            imgPath: `/assets/images/photo-1.jpg`,
+            price: 1000,
+        },
+    ];
+    return (
+        <Base>
+            <CreatorContent
+                imgPath={{
+                    cover: coverIMG,
+                    profile: profileIMG,
+                }}
+                name={creator.name}
+                ethAddress={ethAddress}
+                content={content}
+            />
+        </Base>
+    );
 };
 
 export default Creator;
