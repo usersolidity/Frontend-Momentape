@@ -1,11 +1,11 @@
 // import { useRouter } from "next/router";
 
 import { Core } from "@self.id/core";
-import modelAliases from "../data/model.json";
+import modelAliases from "../../data/model.json";
 
-import { Base } from "../templates/Base";
-import { CreatorContent } from "../components";
-import { IContentItemProps } from "../components/CreatorContent/ContentItem";
+import { Base } from "../../templates/Base";
+import { CreatorContent } from "../../components";
+import { IContentItemProps } from "../../components/CreatorContent/ContentItem";
 // import { useEffect, useRef } from "react";
 
 export type Creator = {
