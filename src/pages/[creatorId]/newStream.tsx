@@ -1,10 +1,211 @@
-import { Base } from '../../templates/Base';
+import { useEffect, useReducer, useRef, useState } from "react";
+import { useRouter } from "next/router";
 
-const StreamId = () => (
-  <Base>
-    {' '}
-    <p>new stream</p>
-  </Base>
-);
+import { uploadResizedImage, loadImage } from "@self.id/image-utils";
+import type { SelfID } from "@self.id/web";
+import modelAliases from "../../data/model.json";
 
-export default StreamId;
+import TextField from "@mui/material/TextField";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import DateTimePicker from "@mui/lab/DateTimePicker";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import { Base } from "../../templates/Base";
+import { ButtonUI } from "../../components";
+
+const NewStream = () => {
+    const router = useRouter();
+    const selfId = useRef<SelfID>();
+    const [loading, setLoading] = useState(false);
+    const [address, setAddress] = useState(null);
+    const [selectedCover, setSelectedCover] = useState(null);
+    const [creatorProfile, setCreatorProfile] = useState({
+        artistName: "",
+        pfp: "",
+    });
+    const initialStream = {
+        name: "",
+        description: "",
+        date: new Date(),
+        livepeerId: null,
+    };
+    const [stream, dispatchStreamChange] = useReducer(
+        (curVals: any, newVals: any) => ({ ...curVals, ...newVals }),
+        initialStream
+    );
+    const profileIMG = creatorProfile.pfp
+        ? creatorProfile.pfp.replace("ipfs://", "https://ipfs.infura.io/ipfs/")
+        : `https://via.placeholder.com/96x96?text=PFP+Not+Set`;
+
+    async function authenticate() {
+        setLoading(true);
+        const [address] = await (window as any).ethereum.enable();
+        setAddress(address);
+
+        const { EthereumAuthProvider, SelfID, WebClient } = await import(
+            "@self.id/web"
+        );
+        const client = new WebClient({
+            ceramic: "testnet-clay",
+            model: modelAliases,
+        });
+        if (address) {
+            const ethAuthProvider = new EthereumAuthProvider(
+                (window as any).ethereum,
+                address
+            );
+
+            const did = await client.authenticate(ethAuthProvider, true);
+            if (
+                router.query.creatorId &&
+                did.id.includes(router.query.creatorId.toString())
+            ) {
+                selfId.current = new SelfID({ client, did });
+                const creator = await selfId.current.get("creator");
+                if (creator) {
+                    console.log(creator, did.id);
+                    setCreatorProfile(creator);
+                }
+            } else {
+                router.push({
+                    pathname: "/[creatorId]/newStream",
+                    query: { creatorId: did.id.replace("did:3:", "") },
+                });
+            }
+        }
+        setLoading(false);
+    }
+    async function createStream() {
+        setLoading(true);
+
+        if (selectedCover) {
+            const imageFile = new File([selectedCover], "cover");
+            const cover = await uploadResizedImage(
+                "https://ipfs.infura.io:5001/api/v0",
+                imageFile.type,
+                await loadImage(imageFile),
+                { width: 640, height: 312 }
+            );
+            dispatchStreamChange({ cover: cover.src });
+            stream.cover = cover.src;
+            setSelectedCover(null);
+        }
+
+        const res = await fetch("https://livepeer.com/api/stream", {
+            headers: {
+                Authorization: "Bearer fdf8f2c0-ba4d-4e4f-be66-7d40ad261a4e",
+                "Content-Type": "application/json",
+            },
+            method: "POST",
+            body: JSON.stringify({
+                name: stream.name,
+                profiles: [],
+            }),
+        });
+        const livepeerStream = await res.json();
+        dispatchStreamChange({ livepeerId: livepeerStream.id });
+        stream.livepeerId = livepeerStream.id;
+
+        const [newStream, contentsList] = await Promise.all([
+            selfId.current?.client.dataModel.createTile("LiveStream", {
+                ...stream,
+                date: stream.date.toISOString(),
+            }),
+            selfId.current?.get("contents"),
+        ]);
+        const contents = contentsList?.contents ?? [];
+        console.log("contents", contents);
+        await selfId.current?.set("contents", {
+            contents: [...contents, newStream?.id.toUrl()],
+        });
+        router.push({
+            pathname: "/[creatorId]/[streamId]",
+            query: {
+                creatorId: selfId.current?.id.replace("did:3:", ""),
+                streamId: newStream?.id.toString(),
+            },
+        });
+
+        setLoading(false);
+    }
+
+    function handleFormChange(event: any) {
+        const { name, value } = event.target;
+        dispatchStreamChange({ [name]: value });
+    }
+
+    useEffect(() => {
+        console.log(stream.date);
+    }, [stream.date]);
+
+    return (
+        <Base>
+            {address ? (
+                <ul>
+                    {loading && <li>Loading...</li>}
+                    <li>Artist name: {creatorProfile.artistName}</li>
+                    <li>
+                        Artist PFP:
+                        <img src={profileIMG} width="50" />
+                    </li>
+                    <li>
+                        Stream name{" "}
+                        <TextField
+                            name="name"
+                            value={stream.name}
+                            onChange={handleFormChange}
+                        />
+                    </li>
+                    <li>
+                        Description{" "}
+                        <TextField
+                            name="description"
+                            value={stream.description}
+                            multiline
+                            onChange={handleFormChange}
+                        />
+                    </li>
+                    <li>
+                        Date{" "}
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <DateTimePicker
+                                renderInput={(props: any) => (
+                                    <TextField {...props} />
+                                )}
+                                label="DateTimePicker"
+                                value={stream.date}
+                                onChange={(newValue: any) =>
+                                    dispatchStreamChange({ date: newValue })
+                                }
+                            />
+                        </LocalizationProvider>
+                    </li>
+                    <li>
+                        Cover
+                        {selectedCover && (
+                            <img
+                                src={URL.createObjectURL(selectedCover)}
+                                width="100"
+                            />
+                        )}
+                        <input
+                            accept="image/png, image/jpeg"
+                            type="file"
+                            onChange={(e: any) =>
+                                setSelectedCover(e.target.files[0])
+                            }
+                        />
+                    </li>
+                    <li>
+                        <ButtonUI onClick={createStream}>
+                            Create Livepeer stream
+                        </ButtonUI>
+                    </li>
+                </ul>
+            ) : (
+                <ButtonUI onClick={authenticate}>Authenticate</ButtonUI>
+            )}
+        </Base>
+    );
+};
+
+export default NewStream;

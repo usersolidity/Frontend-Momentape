@@ -1,4 +1,5 @@
 import { useReducer, useRef, useState } from "react";
+import Link from "next/link";
 
 import { ButtonUI } from "../components";
 import Box from "@mui/material/Box";
@@ -9,12 +10,6 @@ import type { SelfID } from "@self.id/web";
 import { Caip10Link } from "@ceramicnetwork/stream-caip10-link";
 import modelAliases from "../data/model.json";
 import { CeramicApi } from "@ceramicnetwork/common";
-
-// var stream = await fetch('https://livepeer.com/api/stream/80f1938a-afd4-44ce-a8ef-de4fa7667ab6', {
-//   headers: {
-//     'Authorization': 'Bearer fdf8f2c0-ba4d-4e4f-be66-7d40ad261a4e'
-//   }
-// })
 
 const Luca = () => {
     const selfId = useRef<SelfID>();
@@ -27,8 +22,6 @@ const Luca = () => {
     const initialCreatorProfile = {
         artistName: "",
         description: "",
-        pfp: "",
-        cover: "",
         youtube: "",
     };
     const [creatorProfile, dispatchCreatorProfileChange] = useReducer(
@@ -211,7 +204,7 @@ const Luca = () => {
                         <li>
                             PFP{" "}
                             <img
-                                src={creatorProfile.pfp.replace(
+                                src={creatorProfile.pfp?.replace(
                                     "ipfs://",
                                     "https://ipfs.infura.io/ipfs/"
                                 )}
@@ -221,7 +214,7 @@ const Luca = () => {
                         <li>
                             Cover{" "}
                             <img
-                                src={creatorProfile.cover.replace(
+                                src={creatorProfile.cover?.replace(
                                     "ipfs://",
                                     "https://ipfs.infura.io/ipfs/"
                                 )}
@@ -289,6 +282,18 @@ const Luca = () => {
                             <ButtonUI onClick={saveCreatorProfile}>
                                 Save
                             </ButtonUI>
+                        </li>
+                        <li>
+                            <Link
+                                href={{
+                                    pathname: "/[creatorId]",
+                                    query: {
+                                        creatorId: DID.replace("did:3:", ""),
+                                    },
+                                }}
+                            >
+                                <a>Public page</a>
+                            </Link>
                         </li>
                     </ul>
                 </Box>

@@ -21,7 +21,7 @@ const core = new Core({
 });
 export async function getServerSideProps(context: any) {
     const creatorId = context.params.creatorId;
-    const DID = "did:3:" + creatorId;
+    const DID = await core.toDID("did:3:" + creatorId);
     const [cryptoAccounts, creator] = await Promise.all([
         core.get("cryptoAccounts", DID),
         core.get("creator", DID),

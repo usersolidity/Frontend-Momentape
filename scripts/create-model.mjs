@@ -43,11 +43,14 @@ const liveStreamSchemaID = await manager.createSchema("LiveStream", {
             title: "Date",
             maxLength: 30,
         },
-        livePeerId: {
+        livepeerId: {
             type: "string",
             format: "uuid",
             title: "Livepeer stream ID",
             maxLength: 36,
+        },
+        cover: {
+            $ref: "#/definitions/IPFSUrl",
         },
         tags: {
             type: "string",
@@ -57,6 +60,13 @@ const liveStreamSchemaID = await manager.createSchema("LiveStream", {
             type: "string",
             title: "Lock address",
             maxLength: 42,
+        },
+    },
+    definitions: {
+        IPFSUrl: {
+            type: "string",
+            pattern: "^ipfs://.+",
+            maxLength: 150,
         },
     },
 });
