@@ -1,9 +1,9 @@
 import { useReducer, useRef, useState } from "react";
 import * as React from "react";
-import { InputWeb, InputBase, ButtonImage, ButtonUI } from "../../components";
+import { InputBase, ButtonImage, ButtonUI } from "../../components";
 import { Section } from "../../layout/Section";
 import { ButtonUIType } from "../ButtonUI";
-// import { SelfID } from "@self.id/web";
+import type { SelfID } from "@self.id/web";
 import modelAliases from "../../data/model.json";
 import { Caip10Link } from "@ceramicnetwork/stream-caip10-link";
 import { CeramicApi } from "@ceramicnetwork/common";
@@ -384,7 +384,7 @@ const Form = () => {
                     <InputBase
                         label="Channel URL"
                         name={"youtube"}
-                        value={creatorProfile.youtube.replace("https://", "")}
+                        value={creatorProfile.youtube}
                         onChange={handleFormChange}
                     />
 
