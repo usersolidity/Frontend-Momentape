@@ -1,6 +1,6 @@
 import { useReducer, useRef, useState } from "react";
 import * as React from "react";
-import { InputWeb, InputBase, ButtonImage, ButtonUI } from "../../components";
+import { InputWeb, InputBase, ImageContainer, ButtonUI } from "../../components";
 import { Section } from "../../layout/Section";
 import { ButtonUIType } from "../ButtonUI";
 import { SelfID } from "@self.id/web";
@@ -266,7 +266,7 @@ const Form = () => {
                     )}
 
                     {creatorProfile.pfp ? (
-                        <ButtonImage
+                        <ImageContainer
                             src={creatorProfile.pfp.replace(
                                 "ipfs://",
                                 "https://ipfs.infura.io/ipfs/"
@@ -324,7 +324,7 @@ const Form = () => {
                     )}
 
                     {creatorProfile.cover ? (
-                        <ButtonImage
+                        <ImageContainer
                             src={creatorProfile.cover?.replace(
                                 "ipfs://",
                                 "https://ipfs.infura.io/ipfs/"
