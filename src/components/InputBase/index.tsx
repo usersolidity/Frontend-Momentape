@@ -10,6 +10,7 @@ export interface IInputProps {
     type?: InputType;
     value: any;
     label: string;
+    name?: string;
     textArea?: boolean;
     disabled?: boolean;
 }
@@ -17,6 +18,7 @@ const InputBase: React.FunctionComponent<IInputProps> = ({
     onChange,
     type = InputType.text,
     value,
+    name,
     label,
     textArea = false,
     disabled = false,
@@ -26,7 +28,7 @@ const InputBase: React.FunctionComponent<IInputProps> = ({
     return (
         <div className="col-span-6 sm:col-span-3 mt-2">
             <label
-                htmlFor={label}
+                htmlFor={name}
                 className="block text-sm font-medium text-gray-700"
             >
                 {label}
@@ -42,10 +44,10 @@ const InputBase: React.FunctionComponent<IInputProps> = ({
             ) : (
                 <input
                     type={type}
-                    name={label}
+                    name={name}
                     id={label}
                     value={value}
-                    onChange={(e: any) => onChange(e.target.value)}
+                    onChange={(e: any) => onChange(e.target)}
                     className={classes}
                     disabled={disabled}
                 />
