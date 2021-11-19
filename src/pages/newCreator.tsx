@@ -30,35 +30,27 @@ const Luca = () => {
     );
     async function authenticate() {
         setLoading(true);
-        const [address] = await (window as any).ethereum.enable();
+
+        const [[address], { EthereumAuthProvider, SelfID, WebClient }] = await Promise.all([
+            (window as any).ethereum.enable(),
+            import(
+                "@self.id/web"
+            ),
+        ])
         setAddress(address);
 
-        const { EthereumAuthProvider, SelfID, WebClient } = await import(
-            "@self.id/web"
-        );
-        const client = new WebClient({
-            ceramic: "testnet-clay",
-            model: modelAliases,
-        });
         if (address) {
+            const client = new WebClient({
+                ceramic: "testnet-clay",
+                model: modelAliases,
+            });
             const ethAuthProvider = new EthereumAuthProvider(
                 (window as any).ethereum,
                 address
             );
 
-            const [did, link] = await Promise.all([
-                client.authenticate(ethAuthProvider, true),
-                Caip10Link.fromAccount(
-                    client.ceramic as unknown as CeramicApi,
-                    await ethAuthProvider.accountId(),
-                    { pin: true }
-                ),
-            ]);
+            const did = await client.authenticate(ethAuthProvider, true)
             setDID(did.id);
-
-            if (!link.did) {
-                link.setDid(did, ethAuthProvider, { pin: true });
-            }
 
             selfId.current = new SelfID({ client, did });
             const creator = await selfId.current.get("creator");
@@ -66,6 +58,16 @@ const Luca = () => {
                 console.log(creator, did.id);
                 dispatchCreatorProfileChange(creator);
             }
+
+            Caip10Link.fromAccount(
+                client.ceramic as unknown as CeramicApi,
+                await ethAuthProvider.accountId(),
+                { pin: true }
+            ).then((link) => {
+                if (!link.did) {
+                    link.setDid(did, ethAuthProvider, { pin: true });
+                }
+            })
         }
         setLoading(false);
     }

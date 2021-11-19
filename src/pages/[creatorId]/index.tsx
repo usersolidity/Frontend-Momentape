@@ -7,8 +7,8 @@ import modelAliases from "../../data/model.json";
 
 import { Base } from "../../templates/Base";
 import { CreatorContent } from "../../components";
-import { IContentItemProps } from "../../components/CreatorContent/ContentItem";
 import { ButtonUI } from "../../components";
+import { useEffect, useState } from "react";
 
 type Creator = {
     artistName: string;
@@ -34,110 +34,120 @@ const core = new Core({
 const loader = new TileLoader({
     ceramic: core.ceramic as unknown as CeramicApi,
 });
-export async function getServerSideProps(context: any) {
-    const creatorId = context.params.creatorId;
-    const DID = await core.toDID("did:3:" + creatorId);
-    const [cryptoAccounts, creator, { contents }] = await Promise.all([
-        core.get("cryptoAccounts", DID),
-        core.get("creator", DID),
-        core.get("contents", DID),
-    ]);
-    const liveStreamsDocs = await Promise.all(
-        contents.map((content: string) => loader.load(content))
-    );
-    const liveStreams = await Promise.all(
-        liveStreamsDocs.map(async (liveStream: any) => {
-            const res = await fetch(
-                "https://livepeer.com/api/stream/" +
-                    liveStream.state.content.livepeerId,
-                {
-                    headers: {
-                        Authorization:
-                            "Bearer fdf8f2c0-ba4d-4e4f-be66-7d40ad261a4e",
-                    },
-                }
-            );
-            return {
-                ...(await res.json()),
-                ...liveStream.state.content,
-                id: liveStream.id.toString(),
-            };
-        })
-    );
-    return {
-        props: {
-            creator: {
+
+const Creator = () => {
+    const router = useRouter();
+    const [creator, setCreator] = useState<Creator>();
+    const [liveStreams, setLiveStreams] = useState<LiveStream[]>();
+    
+    useEffect(() => {
+        const creatorId = router.query.creatorId;
+        if (!creatorId) {
+            return
+        }
+
+        async function load() {
+            const DID = await core.toDID("did:3:" + creatorId);
+            const [/*cryptoAccounts,*/ creator, { contents }] =
+                await Promise.all([
+                    // core.get("cryptoAccounts", DID),
+                    core.get("creator", DID),
+                    core.get("contents", DID),
+                ]);
+            setCreator({
                 ...creator,
                 id: creatorId,
-            },
-            cryptoAccounts,
-            liveStreams,
-        },
-    };
-}
+            });
 
-const Creator = ({
-    creator,
-    // cryptoAccounts,
-    liveStreams,
-}: {
-    creator: Creator;
-    cryptoAccounts: any;
-    liveStreams: LiveStream[];
-}) => {
-    const router = useRouter();
+            const liveStreamsDocs = await Promise.all(
+                contents.map((content: string) => loader.load(content))
+            );
+            const liveStreams = await Promise.all(
+                liveStreamsDocs.map(async (liveStream: any) => {
+                    const res = await fetch(
+                        "https://livepeer.com/api/stream/" +
+                            liveStream.state.content.livepeerId,
+                        {
+                            headers: {
+                                Authorization:
+                                    "Bearer fdf8f2c0-ba4d-4e4f-be66-7d40ad261a4e",
+                            },
+                        }
+                    );
+                    return {
+                        ...(await res.json()),
+                        ...liveStream.state.content,
+                        id: liveStream.id.toString(),
+                    };
+                })
+            );
+            setLiveStreams(liveStreams);
+        }
 
-    const profileIMG = creator.pfp
-        ? creator.pfp.replace("ipfs://", "https://ipfs.infura.io/ipfs/")
-        : `https://via.placeholder.com/96x96?text=PFP+Not+Set`;
-    const coverIMG = creator.cover
-        ? creator.cover.replace("ipfs://", "https://ipfs.infura.io/ipfs/")
-        : `https://via.placeholder.com/1000x300?text=Cover+Not+Set`;
+        load();
+    }, [router.query]);
+
     const ethAddress = "0xFE92A2bbA39CdF36b53Cab3C8e6cC61bE9710eF6";
-    const content: IContentItemProps[] = liveStreams.map((liveStream) => ({
-        title: liveStream.name,
-        imgPath: liveStream.cover
-            ? liveStream.cover.replace(
-                  "ipfs://",
-                  "https://ipfs.infura.io/ipfs/"
-              )
-            : `https://via.placeholder.com/400x400?text=Stream+Cover+Not+Set`,
-        price: 0,
-        creatorId: creator.id,
-        streamId: liveStream.id,
-        date: liveStream.date,
-    }));
+
     return (
         <Base>
-            <p>
-                <strong>Bio: {creator.description}</strong>
-            </p>
-            <p>
-                <strong>YouTube: {creator.youtube}</strong>
-            </p>
-            <p>
-                <ButtonUI
-                    onClick={() =>
-                        router.push({
-                            pathname: "/[creatorId]/newStream",
-                            query: {
-                                creatorId: creator.id,
-                            },
-                        })
-                    }
-                >
-                    New stream
-                </ButtonUI>
-            </p>
-            <CreatorContent
-                imgPath={{
-                    cover: coverIMG,
-                    profile: profileIMG,
-                }}
-                name={creator.artistName}
-                ethAddress={ethAddress}
-                content={content}
-            />
+            {creator && liveStreams ? (
+                <div>
+                    <p>
+                        <strong>Bio: {creator.description}</strong>
+                    </p>
+                    <p>
+                        <strong>YouTube: {creator.youtube}</strong>
+                    </p>
+                    <p>
+                        <ButtonUI
+                            onClick={() =>
+                                router.push({
+                                    pathname: "/[creatorId]/newStream",
+                                    query: {
+                                        creatorId: creator.id,
+                                    },
+                                })
+                            }
+                        >
+                            New stream
+                        </ButtonUI>
+                    </p>
+                    <CreatorContent
+                        imgPath={{
+                            cover: creator.cover
+                                ? creator.cover.replace(
+                                      "ipfs://",
+                                      "https://ipfs.infura.io/ipfs/"
+                                  )
+                                : `https://via.placeholder.com/1000x300?text=Cover+Not+Set`,
+                            profile: creator.pfp
+                                ? creator.pfp.replace(
+                                      "ipfs://",
+                                      "https://ipfs.infura.io/ipfs/"
+                                  )
+                                : `https://via.placeholder.com/96x96?text=PFP+Not+Set`,
+                        }}
+                        name={creator.artistName}
+                        ethAddress={ethAddress}
+                        content={liveStreams.map((liveStream) => ({
+                            title: liveStream.name,
+                            imgPath: liveStream.cover
+                                ? liveStream.cover.replace(
+                                      "ipfs://",
+                                      "https://ipfs.infura.io/ipfs/"
+                                  )
+                                : `https://via.placeholder.com/400x400?text=Stream+Cover+Not+Set`,
+                            price: 0,
+                            creatorId: creator.id,
+                            streamId: liveStream.id,
+                            date: liveStream.date,
+                        }))}
+                    />{" "}
+                </div>
+            ) : (
+                "Loading..."
+            )}
         </Base>
     );
 };
