@@ -3,7 +3,7 @@ import * as React from "react";
 import { InputWeb, InputBase, ImageContainer, ButtonUI } from "../../components";
 import { Section } from "../../layout/Section";
 import { ButtonUIType } from "../ButtonUI";
-import { SelfID } from "@self.id/web";
+// import { SelfID } from "@self.id/web";
 import modelAliases from "../../data/model.json";
 import { Caip10Link } from "@ceramicnetwork/stream-caip10-link";
 import { CeramicApi } from "@ceramicnetwork/common";

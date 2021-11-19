@@ -1,11 +1,11 @@
 import * as React from "react";
 
-export interface IButtonImageProps {
+export interface IImageContainer {
     src?: string;
     width?: string;
     label?: string;
 }
-const ButtonImage: React.FunctionComponent<IButtonImageProps> = ({
+const ImageContainer: React.FunctionComponent<IImageContainer> = ({
     src,
     width,
     label = "Profile picture",
@@ -40,4 +40,4 @@ const ButtonImage: React.FunctionComponent<IButtonImageProps> = ({
     );
 };
 
-export default ButtonImage;
+export default ImageContainer;
