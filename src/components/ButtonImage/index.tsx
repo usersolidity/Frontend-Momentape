@@ -5,7 +5,7 @@ export interface IImageContainer {
     width?: string;
     label?: string;
 }
-const ImageContainer: React.FunctionComponent<IImageContainer> = ({
+const ButtonImage: React.FunctionComponent<IImageContainer> = ({
     src,
     width,
     label = "Profile picture",
@@ -33,11 +33,9 @@ const ImageContainer: React.FunctionComponent<IImageContainer> = ({
                 ) : (
                     <img src={src} width={"300"} />
                 )}
-
-
             </div>
         </div>
     );
 };
 
-export default ImageContainer;
+export default ButtonImage;
