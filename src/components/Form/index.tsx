@@ -64,9 +64,9 @@ const Form = () => {
 
             selfId.current = new SelfID({ client, did });
             const creator = await selfId.current.get("creator");
-            if (creator) {
-                dispatchCreatorProfileChange(creator);
-            }
+            // if (creator) {
+            //     dispatchCreatorProfileChange(creator);
+            // }
         }
         setLoading(false);
     }
