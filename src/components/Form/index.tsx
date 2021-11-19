@@ -1,6 +1,6 @@
 import { useReducer, useRef, useState } from "react";
 import * as React from "react";
-import { InputWeb, InputBase, ImageContainer, ButtonUI } from "../../components";
+import { InputWeb, InputBase, ButtonImage, ButtonUI } from "../../components";
 import { Section } from "../../layout/Section";
 import { ButtonUIType } from "../ButtonUI";
 // import { SelfID } from "@self.id/web";
@@ -29,6 +29,22 @@ const Form = () => {
         (curVals: any, newVals: any) => ({ ...curVals, ...newVals }),
         initialCreatorProfile
     );
+
+    async function setPfp(event: any) {
+        const pfp = await uploadImageToIPFS(event.target.files[0], 100, 100);
+        dispatchCreatorProfileChange({ pfp });
+    }
+
+    async function setCover(event: any) {
+        const cover = await uploadImageToIPFS(event.target.files[0], 300, 300);
+        dispatchCreatorProfileChange({ cover });
+    }
+
+    function handleFormChange(event: any) {
+        console.log(event);
+        const { name, value } = event;
+        dispatchCreatorProfileChange({ [name]: value });
+    }
 
     async function authenticate() {
         setLoading(true);
@@ -64,9 +80,9 @@ const Form = () => {
 
             selfId.current = new SelfID({ client, did });
             const creator = await selfId.current.get("creator");
-            // if (creator) {
-            //     dispatchCreatorProfileChange(creator);
-            // }
+            if (creator) {
+                dispatchCreatorProfileChange(creator);
+            }
         }
         setLoading(false);
     }
@@ -88,31 +104,6 @@ const Form = () => {
         // }
         await selfId.current?.set("creator", creatorProfile);
         setLoading(false);
-    }
-
-    async function setPfp(event: any) {
-        const pfp = await uploadImageToIPFS(event.target.files[0], 100, 100);
-        dispatchCreatorProfileChange({ pfp });
-    }
-
-    async function setCover(event: any) {
-        const cover = await uploadImageToIPFS(event.target.files[0], 300, 300);
-        dispatchCreatorProfileChange({ cover });
-    }
-
-    async function uploadImageToIPFS(
-        image: any,
-        width: number,
-        height: number
-    ) {
-        const imageFile = new File([image], "pfp");
-        const imageData = await uploadResizedImage(
-            "https://ipfs.infura.io:5001/api/v0",
-            imageFile.type,
-            await loadImage(imageFile),
-            { width, height }
-        );
-        return imageData.src;
     }
 
     async function setYouTubeChannelOnProfile(gapi: any) {
@@ -198,18 +189,25 @@ const Form = () => {
         }
     }
 
-    function handleFormChange(event: any) {
-        const { name, value } = event.target;
-    }
-
-    function dispatchYoutubeChange(event: any) {
-        const { name, value } = event.target;
-        dispatchCreatorProfileChange({ [name]: value });
+    async function uploadImageToIPFS(
+        image: any,
+        width: number,
+        height: number
+    ) {
+        const imageFile = new File([image], "pfp");
+        const imageData = await uploadResizedImage(
+            "https://ipfs.infura.io:5001/api/v0",
+            imageFile.type,
+            await loadImage(imageFile),
+            { width, height }
+        );
+        return imageData.src;
     }
 
     const handleSubmit = (e: any) => {
         e.preventDefault();
     };
+
     return (
         <Section>
             {address ? (
@@ -266,7 +264,7 @@ const Form = () => {
                     )}
 
                     {creatorProfile.pfp ? (
-                        <ImageContainer
+                        <ButtonImage
                             src={creatorProfile.pfp.replace(
                                 "ipfs://",
                                 "https://ipfs.infura.io/ipfs/"
@@ -324,7 +322,7 @@ const Form = () => {
                     )}
 
                     {creatorProfile.cover ? (
-                        <ImageContainer
+                        <ButtonImage
                             src={creatorProfile.cover?.replace(
                                 "ipfs://",
                                 "https://ipfs.infura.io/ipfs/"
@@ -383,21 +381,25 @@ const Form = () => {
                         </div>
                     )}
 
-                    <InputWeb
+                    <InputBase
                         label="Channel URL"
+                        name={"youtube"}
                         value={creatorProfile.youtube.replace("https://", "")}
-                        onChange={dispatchYoutubeChange}
+                        onChange={handleFormChange}
                     />
+
                     <InputBase
                         label="Name"
+                        name={"artistName"}
                         value={creatorProfile.artistName}
                         onChange={handleFormChange}
                     />
 
                     <InputBase
                         label="Bio"
-                        onChange={handleFormChange}
+                        name={"description"}
                         value={creatorProfile.description}
+                        onChange={handleFormChange}
                         textArea
                     />
 
@@ -406,7 +408,7 @@ const Form = () => {
                         onClick={saveCreatorProfile}
                         type={ButtonUIType.submit}
                     >
-                        {loading ? "Saving..." : "Save"}
+                        Save
                     </ButtonUI>
                     <br />
                     <ButtonUI classAttrs={"my-6"}>
