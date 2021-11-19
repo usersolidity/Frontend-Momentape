@@ -33,7 +33,7 @@ const CreatorContent: React.FunctionComponent<ICreatorContentProps> = ({ imgPath
         </div>
         <div className='flex flex-wrap'>
           {content.map((item, i: number) => (
-            <ContentItem imgPath={item.imgPath} title={item.title} price={item.price} key={i} />
+            <ContentItem imgPath={item.imgPath} title={item.title} price={item.price} streamId={item.streamId} date={item.date} creatorId={item.creatorId} key={i} />
           ))}
         </div>
       </div>

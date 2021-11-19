@@ -15,7 +15,7 @@ export type Creator = {
     pfp: string;
     id: string;
 };
-export type Stream = {
+export type LiveStream = {
     name: string;
     cover: string;
     description: string;
@@ -69,7 +69,7 @@ const StreamId = ({
     stream,
 }: {
     creator: Creator;
-    stream: Stream;
+    stream: LiveStream;
 }) => {
     const playerRef = useRef(null);
   
