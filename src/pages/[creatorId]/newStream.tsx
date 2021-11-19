@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useRef, useState } from "react";
+import { useReducer, useRef, useState } from "react";
 import { useRouter } from "next/router";
 
 import { uploadResizedImage, loadImage } from "@self.id/image-utils";
@@ -107,7 +107,9 @@ const NewStream = () => {
 
         const [newStream, contentsList] = await Promise.all([
             selfId.current?.client.dataModel.createTile("LiveStream", {
-                ...stream,
+                description: stream.description,
+                livepeerId: stream.livepeerId,
+                cover: stream.cover,
                 date: stream.date.toISOString(),
             }),
             selfId.current?.get("contents"),
@@ -132,10 +134,6 @@ const NewStream = () => {
         const { name, value } = event.target;
         dispatchStreamChange({ [name]: value });
     }
-
-    useEffect(() => {
-        console.log(stream.date);
-    }, [stream.date]);
 
     return (
         <Base>

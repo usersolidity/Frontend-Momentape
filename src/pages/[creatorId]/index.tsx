@@ -45,7 +45,7 @@ const Creator = ({
     cryptoAccounts: any;
 }) => {
     // const router = useRouter();
-    console.log(cryptoAccounts);
+    console.log('cryptoAccounts', cryptoAccounts);
 
     const profileIMG = creator.pfp
         ? creator.pfp.replace("ipfs://", "https://ipfs.infura.io/ipfs/")
