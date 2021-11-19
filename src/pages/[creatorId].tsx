@@ -10,6 +10,8 @@ import { useEffect, useRef } from "react";
 
 export type Creator = {
     name: string;
+    artistName: string;
+    description: string;
     pfp: string;
     cover: string;
     id: string;
@@ -97,6 +99,8 @@ const Creator = ({
     ];
     return (
         <Base>
+            <strong>Artist name: {creator.artistName}</strong><br/>
+            <strong>Bio: {creator.description}</strong>
             <CreatorContent
                 imgPath={{
                     cover: coverIMG,
