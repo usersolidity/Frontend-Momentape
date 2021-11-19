@@ -21,12 +21,15 @@ const Luca = () => {
     const [loading, setLoading] = useState(false);
     const [address, setAddress] = useState(null);
     const [selectedPFP, setSelectedPFP] = useState(null);
+    const [selectedCover, setSelectedCover] = useState(null);
+    const [youtubeImported, setYouTubeImported] = useState(false);
     const [DID, setDID] = useState("");
     const initialCreatorProfile = {
-        name: "",
         artistName: "",
         description: "",
         pfp: "",
+        cover: "",
+        youtube: "",
     };
     const [creatorProfile, dispatchCreatorProfileChange] = useReducer(
         (curVals: any, newVals: any) => ({ ...curVals, ...newVals }),
@@ -76,22 +79,76 @@ const Luca = () => {
     async function saveCreatorProfile() {
         setLoading(true);
         if (selectedPFP) {
-            const imageFile = new File([selectedPFP], "pfp");
-            const image = await loadImage(imageFile);
-            const imageData = await uploadResizedImage(
-                "https://ipfs.infura.io:5001/api/v0",
-                imageFile.type,
-                image,
-                { width: 100, height: 100 }
-            );
-            dispatchCreatorProfileChange({ pfp: imageData.src });
-            creatorProfile.pfp = imageData.src;
+            const pfp = await uploadImageToIPFS(selectedPFP, 100, 100);
+            dispatchCreatorProfileChange({ pfp });
+            creatorProfile.pfp = pfp;
             setSelectedPFP(null);
         }
+        if (selectedCover) {
+            const cover = await uploadImageToIPFS(selectedCover, 640, 312);
+            dispatchCreatorProfileChange({ cover });
+            creatorProfile.cover = cover;
+            setSelectedCover(null);
+        }
         await selfId.current?.set("creator", creatorProfile);
-
-        await selfId.current?.set("cryptoAccounts", []);
         setLoading(false);
+    }
+
+    async function uploadImageToIPFS(
+        image: any,
+        width: number,
+        height: number
+    ) {
+        const imageFile = new File([image], "pfp");
+        const imageData = await uploadResizedImage(
+            "https://ipfs.infura.io:5001/api/v0",
+            imageFile.type,
+            await loadImage(imageFile),
+            { width, height }
+        );
+        return imageData.src;
+    }
+    async function setYouTubeChannelOnProfile(gapi: any) {
+        const res = await gapi.client.request({
+            path: "https://youtube.googleapis.com/youtube/v3/channels?part=snippet%2CcontentDetails%2Cstatistics%2CbrandingSettings&mine=true",
+        });
+        const channel = res.result.pageInfo.totalResults
+            ? res.result.items[0]
+            : null;
+        if (channel) {
+            try {
+                const response = await fetch(
+                    channel.snippet.thumbnails.default.url
+                );
+                const pfp = await uploadImageToIPFS(
+                    await response.blob(),
+                    100,
+                    100
+                );
+                dispatchCreatorProfileChange({ pfp });
+            } catch (error) {}
+            try {
+                const response = await fetch(
+                    channel.brandingSettings.image.bannerExternalUrl
+                );
+                const cover = await uploadImageToIPFS(
+                    await response.blob(),
+                    640,
+                    312
+                );
+                dispatchCreatorProfileChange({ cover });
+            } catch (error) {}
+            dispatchCreatorProfileChange({
+                artistName:
+                    channel.brandingSettings?.channel?.title ||
+                    channel.snippet.title,
+                description: channel.snippet.description,
+                youtube:
+                    "https://youtube.com/" +
+                    (channel.snippet.customUrl || "channel/" + channel.id),
+            });
+            setYouTubeImported(true);
+        }
     }
     async function importFromYouTube() {
         const gapi: any = await new Promise((resolve) => {
@@ -119,20 +176,12 @@ const Luca = () => {
         } catch (error) {}
         const oAuth2 = gapi.auth2.getAuthInstance();
         const isSignedIn = oAuth2.isSignedIn.get();
-        console.log("isSignedIn", isSignedIn);
         if (isSignedIn) {
-            const channels = await gapi.client.request({
-                path: "https://youtube.googleapis.com/youtube/v3/channels?part=snippet%2CcontentDetails%2Cstatistics&mine=true",
-            });
-            console.log(channels);
+            setYouTubeChannelOnProfile(gapi);
         } else {
             oAuth2.isSignedIn.listen(async (isSignedIn: boolean) => {
-                console.log(isSignedIn);
                 if (isSignedIn) {
-                    const channels = await gapi.client.request({
-                        path: "https://youtube.googleapis.com/youtube/v3/channels?part=snippet%2CcontentDetails%2Cstatistics&mine=true",
-                    });
-                    console.log(channels);
+                    setYouTubeChannelOnProfile(gapi);
                 }
             });
             oAuth2.signIn();
@@ -152,12 +201,15 @@ const Luca = () => {
                         <li>Account address: {address}</li>
                         {loading && <li>Loading...</li>}
                         <li>DID: {DID}</li>
+                        {!youtubeImported && (
+                            <li>
+                                <ButtonUI onClick={importFromYouTube}>
+                                    Import from YouTube
+                                </ButtonUI>
+                            </li>
+                        )}
                         <li>
-                            <ButtonUI onClick={importFromYouTube}>
-                                Import from YouTube
-                            </ButtonUI>
-                        </li>
-                        <li>
+                            PFP{" "}
                             <img
                                 src={creatorProfile.pfp.replace(
                                     "ipfs://",
@@ -167,11 +219,13 @@ const Luca = () => {
                             />
                         </li>
                         <li>
-                            Name{" "}
-                            <TextField
-                                name="name"
-                                value={creatorProfile.name}
-                                onChange={handleFormChange}
+                            Cover{" "}
+                            <img
+                                src={creatorProfile.cover.replace(
+                                    "ipfs://",
+                                    "https://ipfs.infura.io/ipfs/"
+                                )}
+                                width="640"
                             />
                         </li>
                         <li>
@@ -192,6 +246,15 @@ const Luca = () => {
                             />
                         </li>
                         <li>
+                            YouTube channel{" "}
+                            <TextField
+                                name="youtube"
+                                value={creatorProfile.youtube}
+                                onChange={handleFormChange}
+                            />
+                        </li>
+                        <li>
+                            Change PFP
                             {selectedPFP && (
                                 <img
                                     src={URL.createObjectURL(selectedPFP)}
@@ -203,6 +266,22 @@ const Luca = () => {
                                 type="file"
                                 onChange={(e: any) =>
                                     setSelectedPFP(e.target.files[0])
+                                }
+                            />
+                        </li>
+                        <li>
+                            Change Cover
+                            {selectedCover && (
+                                <img
+                                    src={URL.createObjectURL(selectedCover)}
+                                    width="100"
+                                />
+                            )}
+                            <input
+                                accept="image/png, image/jpeg"
+                                type="file"
+                                onChange={(e: any) =>
+                                    setSelectedCover(e.target.files[0])
                                 }
                             />
                         </li>

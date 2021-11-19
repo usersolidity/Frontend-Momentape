@@ -86,11 +86,6 @@ const creatorSchemaID = await manager.createSchema("Creator", {
     title: "Creator",
     type: "object",
     properties: {
-        name: {
-            type: "string",
-            title: "Name",
-            maxLength: 150,
-        },
         artistName: {
             type: "string",
             title: "Artist name",
@@ -99,12 +94,16 @@ const creatorSchemaID = await manager.createSchema("Creator", {
             type: "string",
             maxLength: 420,
         },
+        youtube: {
+            type: "string",
+            maxLength: 50,
+        },
         pfp: {
             $ref: "#/definitions/IPFSUrl",
         },
-        // cover: {
-        //     $ref: "#/definitions/IPFSUrl",
-        // },
+        cover: {
+            $ref: "#/definitions/IPFSUrl",
+        },
     },
     definitions: {
         IPFSUrl: {
