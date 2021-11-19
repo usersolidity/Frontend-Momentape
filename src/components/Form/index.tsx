@@ -408,7 +408,7 @@ const Form = () => {
                         onClick={saveCreatorProfile}
                         type={ButtonUIType.submit}
                     >
-                        Save
+                        {loading ? "Waiting for DiD... " : "Save"}
                     </ButtonUI>
                     <br />
                     <ButtonUI classAttrs={"my-6"}>
