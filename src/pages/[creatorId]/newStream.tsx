@@ -1,8 +1,8 @@
-import { useReducer, useRef, useState } from "react";
+import { useReducer, useState } from "react";
 import { useRouter } from "next/router";
 
+import { useAuthContext } from "../../utils/AuthContext";
 import { uploadResizedImage, loadImage } from "@self.id/image-utils";
-import type { SelfID } from "@self.id/web";
 import modelAliases from "../../data/model.json";
 
 import TextField from "@mui/material/TextField";
@@ -14,14 +14,10 @@ import { ButtonUI } from "../../components";
 
 const NewStream = () => {
     const router = useRouter();
-    const selfId = useRef<SelfID>();
+    const { selfId, address, setAddress, creatorProfile, setCreatorProfile } =
+        useAuthContext();
     const [loading, setLoading] = useState(false);
-    const [address, setAddress] = useState(null);
     const [selectedCover, setSelectedCover] = useState(null);
-    const [creatorProfile, setCreatorProfile] = useState({
-        artistName: "",
-        pfp: "",
-    });
     const initialStream = {
         name: "",
         description: "",
@@ -32,23 +28,26 @@ const NewStream = () => {
         (curVals: any, newVals: any) => ({ ...curVals, ...newVals }),
         initialStream
     );
+
     const profileIMG = creatorProfile.pfp
         ? creatorProfile.pfp.replace("ipfs://", "https://ipfs.infura.io/ipfs/")
         : `https://via.placeholder.com/96x96?text=PFP+Not+Set`;
 
     async function authenticate() {
         setLoading(true);
-        const [address] = await (window as any).ethereum.enable();
+
+        const [[address], { EthereumAuthProvider, SelfID, WebClient }] =
+            await Promise.all([
+                (window as any).ethereum.enable(),
+                import("@self.id/web"),
+            ]);
         setAddress(address);
 
-        const { EthereumAuthProvider, SelfID, WebClient } = await import(
-            "@self.id/web"
-        );
-        const client = new WebClient({
-            ceramic: "testnet-clay",
-            model: modelAliases,
-        });
         if (address) {
+            const client = new WebClient({
+                ceramic: "testnet-clay",
+                model: modelAliases,
+            });
             const ethAuthProvider = new EthereumAuthProvider(
                 (window as any).ethereum,
                 address
@@ -59,11 +58,18 @@ const NewStream = () => {
                 router.query.creatorId &&
                 did.id.includes(router.query.creatorId.toString())
             ) {
-                selfId.current = new SelfID({ client, did });
-                const creator = await selfId.current.get("creator");
-                if (creator) {
-                    console.log(creator, did.id);
-                    setCreatorProfile(creator);
+                if (selfId) {
+                    selfId.current = new SelfID({ client, did });
+                    const creator = await selfId.current.get("creator");
+                    if (creator) {
+                        setCreatorProfile({
+                            ...creator,
+                            id: did.id.replace(
+                                "did:3:",
+                                ""
+                            )
+                        });
+                    }
                 }
             } else {
                 router.push({
@@ -105,27 +111,29 @@ const NewStream = () => {
         dispatchStreamChange({ livepeerId: livepeerStream.id });
         stream.livepeerId = livepeerStream.id;
 
-        const [newStream, contentsList] = await Promise.all([
-            selfId.current?.client.dataModel.createTile("LiveStream", {
-                description: stream.description,
-                livepeerId: stream.livepeerId,
-                cover: stream.cover,
-                date: stream.date.toISOString(),
-            }),
-            selfId.current?.get("contents"),
-        ]);
-        const contents = contentsList?.contents ?? [];
-        console.log("contents", contents);
-        await selfId.current?.set("contents", {
-            contents: [...contents, newStream?.id.toUrl()],
-        });
-        router.push({
-            pathname: "/[creatorId]/[streamId]",
-            query: {
-                creatorId: selfId.current?.id.replace("did:3:", ""),
-                streamId: newStream?.id.toString(),
-            },
-        });
+        if (selfId) {
+            const [newStream, contentsList] = await Promise.all([
+                selfId.current?.client.dataModel.createTile("LiveStream", {
+                    description: stream.description,
+                    livepeerId: stream.livepeerId,
+                    cover: stream.cover,
+                    date: stream.date.toISOString(),
+                }),
+                selfId.current?.get("contents"),
+            ]);
+            const contents = contentsList?.contents ?? [];
+            console.log("contents", contents);
+            await selfId.current?.set("contents", {
+                contents: [...contents, newStream?.id.toUrl()],
+            });
+            router.push({
+                pathname: "/[creatorId]/[streamId]",
+                query: {
+                    creatorId: selfId.current?.id.replace("did:3:", ""),
+                    streamId: newStream?.id.toString(),
+                },
+            });
+        }
 
         setLoading(false);
     }

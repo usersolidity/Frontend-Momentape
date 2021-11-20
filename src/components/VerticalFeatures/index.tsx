@@ -1,7 +1,5 @@
 import { useRouter } from "next/router";
 
-import modelAliases from "../../data/model.json";
-
 import { VerticalFeatureRow } from "./VerticalFeatureRow";
 import { ButtonUI } from "../../components";
 import { Section } from "../../layout/Section";
@@ -10,34 +8,6 @@ import { VariantType } from "../ButtonUI/index";
 const VerticalFeatures = () => {
     const router = useRouter();
 
-    async function authenticate() {
-        const [address] = await (window as any).ethereum.enable();
-        const { EthereumAuthProvider, WebClient } = await import(
-            "@self.id/web"
-        );
-        const client = new WebClient({
-            ceramic: "testnet-clay",
-            model: modelAliases,
-        });
-        if (address) {
-            const ethAuthProvider = new EthereumAuthProvider(
-                (window as any).ethereum,
-                address
-            );
-
-            const did = await client.authenticate(ethAuthProvider, true);
-            if (did.id) {
-                router.push({
-                    pathname: "/[creatorId]",
-                    query: { creatorId: did.id.replace("did:3:", "") },
-                });
-            } else {
-                router.push({
-                    pathname: "/newCreator",
-                });
-            }
-        }
-    }
     return (
         <Section>
             <VerticalFeatureRow
@@ -60,13 +30,6 @@ const VerticalFeatures = () => {
                     }
                 >
                     Get started as an artist
-                </ButtonUI>
-                <br />
-                <ButtonUI
-                    variant={VariantType.contained}
-                    onClick={authenticate}
-                >
-                    Connect to see your profile
                 </ButtonUI>
             </VerticalFeatureRow>
             <VerticalFeatureRow
