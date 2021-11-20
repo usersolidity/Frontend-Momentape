@@ -48,10 +48,7 @@ const Luca = () => {
                 if (creator) {
                     setCreatorProfile({
                         ...creator,
-                        id: did.id.replace(
-                            "did:3:",
-                            ""
-                        )
+                        id: did.id.replace("did:3:", ""),
                     });
                 }
             }
