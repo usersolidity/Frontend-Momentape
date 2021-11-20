@@ -66,10 +66,12 @@ export default function PrimarySearchAppBar() {
                         });
                     }
                 }
-                router.push({
-                    pathname: "/[creatorId]",
-                    query: { creatorId: did.id.replace("did:3:", "") },
-                });
+                if (router.route === '/') {
+                    router.push({
+                        pathname: "/[creatorId]",
+                        query: { creatorId: did.id.replace("did:3:", "") },
+                    });
+                }
             } else {
                 router.push({
                     pathname: "/newCreator",
