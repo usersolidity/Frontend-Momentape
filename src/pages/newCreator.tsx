@@ -1,71 +1,70 @@
-import { useReducer, useRef, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
+
+import { useAuthContext } from "../utils/AuthContext";
 
 import { ButtonUI } from "../components";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 
 import { uploadResizedImage, loadImage } from "@self.id/image-utils";
-import type { SelfID } from "@self.id/web";
 import { Caip10Link } from "@ceramicnetwork/stream-caip10-link";
 import modelAliases from "../data/model.json";
 import { CeramicApi } from "@ceramicnetwork/common";
 
 const Luca = () => {
-    const selfId = useRef<SelfID>();
+    const { selfId, address, setAddress, creatorProfile, setCreatorProfile } =
+        useAuthContext();
     const [loading, setLoading] = useState(false);
-    const [address, setAddress] = useState(null);
     const [selectedPFP, setSelectedPFP] = useState(null);
     const [selectedCover, setSelectedCover] = useState(null);
     const [youtubeImported, setYouTubeImported] = useState(false);
-    const [DID, setDID] = useState("");
-    const initialCreatorProfile = {
-        artistName: "",
-        description: "",
-        youtube: "",
-    };
-    const [creatorProfile, dispatchCreatorProfileChange] = useReducer(
-        (curVals: any, newVals: any) => ({ ...curVals, ...newVals }),
-        initialCreatorProfile
-    );
+
     async function authenticate() {
         setLoading(true);
-        const [address] = await (window as any).ethereum.enable();
+
+        const [[address], { EthereumAuthProvider, SelfID, WebClient }] =
+            await Promise.all([
+                (window as any).ethereum.enable(),
+                import("@self.id/web"),
+            ]);
         setAddress(address);
 
-        const { EthereumAuthProvider, SelfID, WebClient } = await import(
-            "@self.id/web"
-        );
-        const client = new WebClient({
-            ceramic: "testnet-clay",
-            model: modelAliases,
-        });
         if (address) {
+            const client = new WebClient({
+                ceramic: "testnet-clay",
+                model: modelAliases,
+            });
             const ethAuthProvider = new EthereumAuthProvider(
                 (window as any).ethereum,
                 address
             );
 
-            const [did, link] = await Promise.all([
-                client.authenticate(ethAuthProvider, true),
-                Caip10Link.fromAccount(
-                    client.ceramic as unknown as CeramicApi,
-                    await ethAuthProvider.accountId(),
-                    { pin: true }
-                ),
-            ]);
-            setDID(did.id);
+            const did = await client.authenticate(ethAuthProvider, true);
 
-            if (!link.did) {
-                link.setDid(did, ethAuthProvider, { pin: true });
+            if (selfId) {
+                selfId.current = new SelfID({ client, did });
+                const creator = await selfId.current.get("creator");
+                if (creator) {
+                    setCreatorProfile({
+                        ...creator,
+                        id: did.id.replace(
+                            "did:3:",
+                            ""
+                        )
+                    });
+                }
             }
 
-            selfId.current = new SelfID({ client, did });
-            const creator = await selfId.current.get("creator");
-            if (creator) {
-                console.log(creator, did.id);
-                dispatchCreatorProfileChange(creator);
-            }
+            Caip10Link.fromAccount(
+                client.ceramic as unknown as CeramicApi,
+                await ethAuthProvider.accountId(),
+                { pin: true }
+            ).then((link) => {
+                if (!link.did) {
+                    link.setDid(did, ethAuthProvider, { pin: true });
+                }
+            });
         }
         setLoading(false);
     }
@@ -73,17 +72,19 @@ const Luca = () => {
         setLoading(true);
         if (selectedPFP) {
             const pfp = await uploadImageToIPFS(selectedPFP, 100, 100);
-            dispatchCreatorProfileChange({ pfp });
+            setCreatorProfile({ pfp });
             creatorProfile.pfp = pfp;
             setSelectedPFP(null);
         }
         if (selectedCover) {
             const cover = await uploadImageToIPFS(selectedCover, 640, 312);
-            dispatchCreatorProfileChange({ cover });
+            setCreatorProfile({ cover });
             creatorProfile.cover = cover;
             setSelectedCover(null);
         }
-        await selfId.current?.set("creator", creatorProfile);
+        if (selfId) {
+            await selfId.current?.set("creator", creatorProfile);
+        }
         setLoading(false);
     }
 
@@ -118,7 +119,7 @@ const Luca = () => {
                     100,
                     100
                 );
-                dispatchCreatorProfileChange({ pfp });
+                setCreatorProfile({ pfp });
             } catch (error) {}
             try {
                 const response = await fetch(
@@ -129,9 +130,9 @@ const Luca = () => {
                     640,
                     312
                 );
-                dispatchCreatorProfileChange({ cover });
+                setCreatorProfile({ cover });
             } catch (error) {}
-            dispatchCreatorProfileChange({
+            setCreatorProfile({
                 artistName:
                     channel.brandingSettings?.channel?.title ||
                     channel.snippet.title,
@@ -183,7 +184,7 @@ const Luca = () => {
 
     function handleFormChange(event: any) {
         const { name, value } = event.target;
-        dispatchCreatorProfileChange({ [name]: value });
+        setCreatorProfile({ [name]: value });
     }
 
     return (
@@ -193,7 +194,7 @@ const Luca = () => {
                     <ul>
                         <li>Account address: {address}</li>
                         {loading && <li>Loading...</li>}
-                        <li>DID: {DID}</li>
+                        <li>DID: {selfId?.current?.id}</li>
                         {!youtubeImported && (
                             <li>
                                 <ButtonUI onClick={importFromYouTube}>
@@ -288,7 +289,10 @@ const Luca = () => {
                                 href={{
                                     pathname: "/[creatorId]",
                                     query: {
-                                        creatorId: DID.replace("did:3:", ""),
+                                        creatorId: selfId?.current?.id.replace(
+                                            "did:3:",
+                                            ""
+                                        ),
                                     },
                                 }}
                             >

@@ -158,6 +158,11 @@ await manager.createDefinition("creator", {
     description: "Creator profile",
     schema: manager.getSchemaURL(creatorSchemaID),
 });
+await manager.createDefinition("liveStream", {
+    name: "liveStream",
+    description: "Live stream",
+    schema: manager.getSchemaURL(liveStreamSchemaID),
+});
 
 // Write model to JSON file
 await writeFile(
