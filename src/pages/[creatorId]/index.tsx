@@ -52,9 +52,10 @@ const Creator = () => {
             }
 
             Promise.all([
-                // core.get("cryptoAccounts", DID),
+                core.get("cryptoAccounts", DID),
                 core.get("contents", DID),
-            ]).then(async ([/*cryptoAccounts,*/ { contents }]) => {
+            ]).then(async ([cryptoAccounts, { contents }]) => {
+                console.log('cryptoAccounts', cryptoAccounts)
                 const liveStreamsDocs = await Promise.all(
                     contents.map((content: string) => loader.load(content))
                 );

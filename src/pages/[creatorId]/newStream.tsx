@@ -5,6 +5,7 @@ import { useAuthContext } from "../../utils/AuthContext";
 import { uploadResizedImage, loadImage } from "@self.id/image-utils";
 import modelAliases from "../../data/model.json";
 
+import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import DateTimePicker from "@mui/lab/DateTimePicker";
@@ -23,6 +24,9 @@ const NewStream = () => {
         description: "",
         date: new Date(),
         livepeerId: null,
+        lockAddress: null,
+        keyPrice: 0.1,
+        maxNumberOfKeys: 50,
     };
     const [stream, dispatchStreamChange] = useReducer(
         (curVals: any, newVals: any) => ({ ...curVals, ...newVals }),
@@ -64,10 +68,7 @@ const NewStream = () => {
                     if (creator) {
                         setCreatorProfile({
                             ...creator,
-                            id: did.id.replace(
-                                "did:3:",
-                                ""
-                            )
+                            id: did.id.replace("did:3:", ""),
                         });
                     }
                 }
@@ -95,7 +96,24 @@ const NewStream = () => {
             stream.cover = cover.src;
             setSelectedCover(null);
         }
-
+        const response = await fetch("http://localhost:3001/api/createLock", {
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+            method: "POST",
+            body: JSON.stringify({
+                creatorAddress: address,
+                expirationDuration: 60 * 60 * 24, // 1 day
+                keyPrice: stream.keyPrice,
+                maxNumberOfKeys: Number(stream.maxNumberOfKeys),
+                name: stream.name,
+            }),
+        });
+        const lockAddress = await response.text();
+        if (!response.ok) {
+            return console.error(lockAddress);
+        }
         const res = await fetch("https://livepeer.com/api/stream", {
             headers: {
                 Authorization: "Bearer fdf8f2c0-ba4d-4e4f-be66-7d40ad261a4e",
@@ -108,8 +126,13 @@ const NewStream = () => {
             }),
         });
         const livepeerStream = await res.json();
-        dispatchStreamChange({ livepeerId: livepeerStream.id });
+
+        dispatchStreamChange({
+            livepeerId: livepeerStream.id,
+            lockAddress,
+        });
         stream.livepeerId = livepeerStream.id;
+        stream.lockAddress = lockAddress;
 
         if (selfId) {
             const [newStream, contentsList] = await Promise.all([
@@ -117,12 +140,12 @@ const NewStream = () => {
                     description: stream.description,
                     livepeerId: stream.livepeerId,
                     cover: stream.cover,
+                    lockAddress: stream.lockAddress,
                     date: stream.date.toISOString(),
                 }),
                 selfId.current?.get("contents"),
             ]);
             const contents = contentsList?.contents ?? [];
-            console.log("contents", contents);
             await selfId.current?.set("contents", {
                 contents: [...contents, newStream?.id.toUrl()],
             });
@@ -154,16 +177,16 @@ const NewStream = () => {
                         <img src={profileIMG} width="50" />
                     </li>
                     <li>
-                        Stream name{" "}
                         <TextField
+                            label="Stream name"
                             name="name"
                             value={stream.name}
                             onChange={handleFormChange}
                         />
                     </li>
                     <li>
-                        Description{" "}
                         <TextField
+                            label="Description"
                             name="description"
                             value={stream.description}
                             multiline
@@ -171,13 +194,37 @@ const NewStream = () => {
                         />
                     </li>
                     <li>
-                        Date{" "}
+                        <TextField
+                            label="Unlock price"
+                            name="keyPrice"
+                            value={stream.keyPrice}
+                            type="number"
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        ETH
+                                    </InputAdornment>
+                                ),
+                            }}
+                            onChange={handleFormChange}
+                        />
+                    </li>
+                    <li>
+                        <TextField
+                            label="Max unlock"
+                            name="maxNumberOfKeys"
+                            value={stream.maxNumberOfKeys}
+                            type="number"
+                            onChange={handleFormChange}
+                        />
+                    </li>
+                    <li>
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <DateTimePicker
                                 renderInput={(props: any) => (
                                     <TextField {...props} />
                                 )}
-                                label="DateTimePicker"
+                                label="Date"
                                 value={stream.date}
                                 onChange={(newValue: any) =>
                                     dispatchStreamChange({ date: newValue })
@@ -201,11 +248,13 @@ const NewStream = () => {
                             }
                         />
                     </li>
-                    <li>
-                        <ButtonUI onClick={createStream}>
-                            Create Livepeer stream
-                        </ButtonUI>
-                    </li>
+                    {!loading && (
+                        <li>
+                            <ButtonUI onClick={createStream}>
+                                Create Livepeer stream
+                            </ButtonUI>
+                        </li>
+                    )}
                 </ul>
             ) : (
                 <ButtonUI onClick={authenticate}>Authenticate</ButtonUI>
