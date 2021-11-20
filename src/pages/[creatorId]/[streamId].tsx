@@ -137,9 +137,12 @@ const StreamId = () => {
                 console.log("unlockProtocol.status", e.detail.state);
                 setLockStatus(e.detail.state);
             });
-            window.addEventListener("unlockProtocol.authenticated", (e: any) => {
-                console.log("unlockProtocol.authenticated", e.detail);
-            });
+            window.addEventListener(
+                "unlockProtocol.authenticated",
+                (e: any) => {
+                    console.log("unlockProtocol.authenticated", e.detail);
+                }
+            );
             const lockState = unlockProtocol.getState();
             console.log("lockState", lockState);
             if (lockState) {
