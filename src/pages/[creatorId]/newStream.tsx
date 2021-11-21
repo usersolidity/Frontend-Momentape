@@ -100,12 +100,10 @@ const NewStream = () => {
             "https://momentape-api.vercel.app/api/createLock",
             {
                 headers: {
-                    Accept: "application/json",
                     "Content-Type": "application/json",
                 },
                 method: "POST",
                 body: JSON.stringify({
-                    creatorAddress: address,
                     expirationDuration: 60 * 60 * 24, // 1 day
                     keyPrice: stream.keyPrice,
                     maxNumberOfKeys: Number(stream.maxNumberOfKeys),
@@ -118,6 +116,16 @@ const NewStream = () => {
             setLoading(false);
             return console.error(lockAddress);
         }
+        fetch("https://momentape-api.vercel.app/api/transferLockOwnership", {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            method: "POST",
+            body: JSON.stringify({
+                creatorAddress: address,
+                lockAddress,
+            }),
+        });
 
         const res = await fetch(
             "https://momentape-api.vercel.app/api/newStream",
