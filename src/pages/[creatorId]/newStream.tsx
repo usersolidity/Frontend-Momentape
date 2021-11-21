@@ -96,22 +96,26 @@ const NewStream = () => {
             stream.cover = cover.src;
             setSelectedCover(null);
         }
-        const response = await fetch("http://localhost:3001/api/createLock", {
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-            },
-            method: "POST",
-            body: JSON.stringify({
-                creatorAddress: address,
-                expirationDuration: 60 * 60 * 24, // 1 day
-                keyPrice: stream.keyPrice,
-                maxNumberOfKeys: Number(stream.maxNumberOfKeys),
-                name: stream.name,
-            }),
-        });
+        const response = await fetch(
+            "https://momentape-api.vercel.app/api/createLock",
+            {
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                method: "POST",
+                body: JSON.stringify({
+                    creatorAddress: address,
+                    expirationDuration: 60 * 60 * 24, // 1 day
+                    keyPrice: stream.keyPrice,
+                    maxNumberOfKeys: Number(stream.maxNumberOfKeys),
+                    name: stream.name,
+                }),
+            }
+        );
         const lockAddress = await response.text();
         if (!response.ok) {
+            setLoading(false);
             return console.error(lockAddress);
         }
         const res = await fetch("https://livepeer.com/api/stream", {

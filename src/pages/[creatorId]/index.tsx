@@ -32,7 +32,7 @@ const Creator = () => {
     const router = useRouter();
     const { creatorProfile } = useAuthContext();
     const [creator, setCreator] = useState<Creator>();
-    const [liveStreams, setLiveStreams] = useState<LiveStream[]>();
+    const [liveStreams, setLiveStreams] = useState<LiveStream[]>([]);
 
     useEffect(() => {
         const creatorId = router.query.creatorId;
@@ -54,10 +54,16 @@ const Creator = () => {
             Promise.all([
                 core.get("cryptoAccounts", DID),
                 core.get("contents", DID),
-            ]).then(async ([cryptoAccounts, { contents }]) => {
+            ]).then(async ([cryptoAccounts, contents]) => {
                 console.log("cryptoAccounts", cryptoAccounts);
+                if (!contents) {
+                    console.log("No livestreams");
+                    return;
+                }
                 const liveStreamsDocs = await Promise.all(
-                    contents.map((content: string) => loader.load(content))
+                    contents.contents.map((content: string) =>
+                        loader.load(content)
+                    )
                 );
                 const liveStreams = await Promise.all(
                     liveStreamsDocs.map(async (liveStream: any) => {
@@ -83,13 +89,13 @@ const Creator = () => {
         }
 
         load();
-    }, [router.query]);
+    }, [creatorProfile, router.query]);
 
     const ethAddress = "0xFE92A2bbA39CdF36b53Cab3C8e6cC61bE9710eF6";
 
     return (
         <Base>
-            {creator && liveStreams ? (
+            {creator ? (
                 <div>
                     <p>
                         <strong>Bio: {creator.description}</strong>

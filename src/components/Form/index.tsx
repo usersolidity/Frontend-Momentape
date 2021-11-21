@@ -1,5 +1,4 @@
 import { useState } from "react";
-import * as React from "react";
 import { InputBase, ButtonImage, ButtonUI } from "../../components";
 import { Section } from "../../layout/Section";
 import { ButtonUIType } from "../ButtonUI";
@@ -44,11 +43,11 @@ const Form = () => {
                 selfId.current = new SelfID({ client, did });
                 const creator = await selfId.current.get("creator");
                 if (creator) {
-                    setCreatorProfile({
-                        ...creator,
-                        id: did.id.replace("did:3:", ""),
-                    });
+                    setCreatorProfile(creator);
                 }
+                setCreatorProfile({
+                    id: did.id.replace("did:3:", ""),
+                });
             }
 
             Caip10Link.fromAccount(
