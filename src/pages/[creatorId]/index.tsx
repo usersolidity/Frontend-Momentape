@@ -92,14 +92,8 @@ const Creator = () => {
                                 rinkeby.id
                             ),
                             fetch(
-                                "https://livepeer.com/api/stream/" +
-                                    liveStream.state.content.livepeerId,
-                                {
-                                    headers: {
-                                        Authorization:
-                                            "Bearer fdf8f2c0-ba4d-4e4f-be66-7d40ad261a4e",
-                                    },
-                                }
+                                "https://momentape-api.vercel.app/api/getStream?livepeerId=" +
+                                    liveStream.state.content.livepeerId
                             ),
                         ]);
                         return {
@@ -127,26 +121,30 @@ const Creator = () => {
                     <p>
                         <strong>YouTube: {creator.youtube}</strong>
                     </p>
-                    <p>
-                        <ButtonUI
-                            onClick={() =>
-                                router.push({
-                                    pathname: "/[creatorId]/newStream",
-                                    query: {
-                                        creatorId: creator.id,
-                                    },
-                                })
-                            }
-                        >
-                            New stream
-                        </ButtonUI>
-                    </p>
                     {creatorProfile.id === creator.id && (
-                        <p>
-                            <ButtonUI onClick={() => router.push("/creator")}>
-                                Edit profile
-                            </ButtonUI>
-                        </p>
+                        <>
+                            <p>
+                                <ButtonUI
+                                    onClick={() =>
+                                        router.push({
+                                            pathname: "/[creatorId]/newStream",
+                                            query: {
+                                                creatorId: creator.id,
+                                            },
+                                        })
+                                    }
+                                >
+                                    New stream
+                                </ButtonUI>
+                            </p>
+                            <p>
+                                <ButtonUI
+                                    onClick={() => router.push("/creator")}
+                                >
+                                    Edit profile
+                                </ButtonUI>
+                            </p>
+                        </>
                     )}
                     <CreatorContent
                         imgPath={{

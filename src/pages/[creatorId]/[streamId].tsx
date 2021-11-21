@@ -88,13 +88,8 @@ const StreamId = () => {
                 id: creatorId,
             });
             const res = await fetch(
-                "https://livepeer.com/api/stream/" + liveStream.livepeerId,
-                {
-                    headers: {
-                        Authorization:
-                            "Bearer fdf8f2c0-ba4d-4e4f-be66-7d40ad261a4e",
-                    },
-                }
+                "https://momentape-api.vercel.app/api/getStream?livepeerId=" +
+                    liveStream.livepeerId
             );
             const livepeerStream = await res.json();
             const lockAddress = liveStream.lockAddress;

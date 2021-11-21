@@ -118,18 +118,22 @@ const NewStream = () => {
             setLoading(false);
             return console.error(lockAddress);
         }
-        const res = await fetch("https://livepeer.com/api/stream", {
-            headers: {
-                Authorization: "Bearer fdf8f2c0-ba4d-4e4f-be66-7d40ad261a4e",
-                "Content-Type": "application/json",
-            },
-            method: "POST",
-            body: JSON.stringify({
-                name: stream.name,
-                profiles: [],
-            }),
-        });
+
+        const res = await fetch(
+            "https://momentape-api.vercel.app/api/newStream",
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                method: "POST",
+                body: JSON.stringify(stream.name),
+            }
+        );
         const livepeerStream = await res.json();
+        if (!response.ok) {
+            setLoading(false);
+            return console.error(livepeerStream);
+        }
 
         dispatchStreamChange({
             livepeerId: livepeerStream.id,
