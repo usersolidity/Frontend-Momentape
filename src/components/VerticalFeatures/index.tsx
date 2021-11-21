@@ -25,7 +25,7 @@ const VerticalFeatures = () => {
                     variant={VariantType.contained}
                     onClick={() =>
                         router.push({
-                            pathname: "/newCreator",
+                            pathname: "/form",
                         })
                     }
                 >
