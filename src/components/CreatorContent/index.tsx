@@ -1,7 +1,11 @@
 import styles from "./CreatorContent.module.css";
 import _ from "lodash";
 import ContentItem, { IContentItemProps } from "./ContentItem";
-
+import * as React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faYoutube } from "@fortawesome/free-brands-svg-icons";
+import { useRouter } from "next/router";
+import Link from "next/link";
 type ICreatorContentProps = {
     imgPath: {
         profile: string;
@@ -10,6 +14,8 @@ type ICreatorContentProps = {
     name: string;
     ethAddress: string;
     content: IContentItemProps[];
+    creator: any;
+    editProfile: boolean;
 };
 
 const CreatorContent: React.FunctionComponent<ICreatorContentProps> = ({
@@ -17,6 +23,8 @@ const CreatorContent: React.FunctionComponent<ICreatorContentProps> = ({
     name,
     ethAddress,
     content,
+    creator,
+    editProfile,
 }) => {
     return (
         <>
@@ -32,16 +40,32 @@ const CreatorContent: React.FunctionComponent<ICreatorContentProps> = ({
                             alt="profile img"
                             className="w-24 h-24 rounded object-cover"
                         />
+                        {editProfile ? (
+                            <Link href={"/creator"}><p className={" hover:text-red-700 ml-4 text-gray-800 text-xs"}>Edit Profile</p></Link>
+                        ) : (
+                            " "
+                        )}
                     </div>
-                    <div>
+                    <div className={"w-50"}>
                         <span className="text-gray-900 text-2xl font-bold ml-4 block">
                             {name}
+                            <a
+                                className="ml-4 hover:text-red-700 duration-200 transition-colors"
+                                href={creator.youtube}
+                                target="_blank"
+                                rel="noreferrer"
+                            >
+                                <FontAwesomeIcon icon={faYoutube} />
+                            </a>
                         </span>
                         <span className="text-gray-800 block ml-4">
                             {_.truncate(ethAddress, {
                                 length: 14,
                                 separator: " ",
                             })}
+                        </span>
+                        <span className="text-gray-800 block ml-4">
+                            <p>{creator.description}</p>
                         </span>
                     </div>
                 </div>

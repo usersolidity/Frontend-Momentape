@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 
-import { VerticalFeatureRow } from "./VerticalFeatureRow";
 import { ButtonUI } from "../../components";
 import { Section } from "../../layout/Section";
 import { VariantType } from "../ButtonUI/index";
@@ -10,33 +9,76 @@ const VerticalFeatures = () => {
 
     return (
         <Section>
-            <VerticalFeatureRow
-                title="Collect creators&#39; Top Moments"
-                description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse bibendum, nunc non posuere consectetur, justo erat semper enim, non hendrerit dui odio id enim."
-                image={{ path: "feature.svg", alt: "feature" }}
-            />
-            <VerticalFeatureRow
-                title="You’re an Artist"
-                description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse bibendum, nunc non posuere consectetur, justo erat semper enim, non hendrerit dui odio id enim."
-                image={{ path: "feature.svg", alt: "feature" }}
-                reverse
-            >
-                <ButtonUI
-                    variant={VariantType.contained}
-                    onClick={() =>
-                        router.push({
-                            pathname: "/newCreator",
-                        })
-                    }
+            <section className="relative">
+                {/* Illustration behind hero content */}
+                <div
+                    className="absolute left-1/2 transform -translate-x-1/2 bottom-0 pointer-events-none"
+                    aria-hidden="true"
                 >
-                    Get started as an artist
-                </ButtonUI>
-            </VerticalFeatureRow>
-            <VerticalFeatureRow
-                title="You’re a Collector"
-                description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse bibendum, nunc non posuere consectetur, justo erat semper enim, non hendrerit dui odio id enim."
-                image={{ path: "feature.svg", alt: "feature" }}
-            />
+                    <svg
+                        width="1360"
+                        height="578"
+                        viewBox="0 0 1360 578"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <defs>
+                            <linearGradient
+                                x1="50%"
+                                y1="0%"
+                                x2="50%"
+                                y2="100%"
+                                id="illustration-01"
+                            >
+                                <stop stopColor="#FFF" offset="0%" />
+                                <stop stopColor="#EAEAEA" offset="77.402%" />
+                                <stop stopColor="#DFDFDF" offset="100%" />
+                            </linearGradient>
+                        </defs>
+                        <g fill="url(#illustration-01)" fillRule="evenodd">
+                            <circle cx="1232" cy="128" r="128" />
+                            <circle cx="155" cy="443" r="64" />
+                        </g>
+                    </svg>
+                </div>
+
+                <div className="max-w-5xl mx-auto px-4 sm:px-6">
+                    {/* Hero content */}
+                    <div className="pt-32 pb-12 md:pt-40 md:pb-20">
+                        {/* Section header */}
+                        <div className="text-center pb-12 md:pb-16">
+                            <h1
+                                className="text-5xl md:text-6xl font-extrabold leading-tighter tracking-tighter mb-4"
+                                data-aos="zoom-y-out"
+                            >
+                                <span className="bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-500">
+                                    Share your favorite moments
+                                </span>
+                            </h1>
+
+                            <div className="max-w-3xl mx-auto">
+                                <p
+                                    className="text-xl text-gray-600 mb-8"
+                                    data-aos="zoom-y-out"
+                                    data-aos-delay="150"
+                                >
+                                    Manage all your creative work in one place,
+                                    and share them on your own terms.
+                                </p>
+                            </div>
+                            <ButtonUI
+                                variant={VariantType.contained}
+                                onClick={() =>
+                                    router.push({
+                                        pathname: "/creator",
+                                    })
+                                }
+                            >
+                                Get Started
+                            </ButtonUI>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </Section>
     );
 };

@@ -8,6 +8,7 @@ import { CeramicApi } from "@ceramicnetwork/common";
 import { loadImage, uploadResizedImage } from "@self.id/image-utils";
 import Link from "next/link";
 import { useAuthContext } from "../../utils/AuthContext";
+import * as React from "react";
 
 const Form = () => {
     const { selfId, address, setAddress, creatorProfile, setCreatorProfile } =
@@ -421,29 +422,67 @@ const Form = () => {
                             </div>
                         </div>
                     )}
+                    
+                    <div className="col-span-6 sm:col-span-3 mt-2">
+                        <label
+                            htmlFor={"youtube"}
+                            className="block text-sm font-medium text-gray-700"
+                        >
+                            Channel URL
+                        </label>
+                        <input
+                            type={"text"}
+                            name={"youtube"}
+                            id={"youtube"}
+                            value={creatorProfile.youtube}
+                            placeholder={"Video channel URL"}
+                            onChange={handleFormChange}
+                            className={
+                                "mt-1 p-2 focus:ring-main-100 focus:border-main-100 block w-full shadow-sm sm:text-sm border border-gray-300 rounded-md"
+                            }
+                        />
+                    </div>
 
-                    <InputBase
-                        label="Channel URL"
-                        name={"youtube"}
-                        value={creatorProfile.youtube}
-                        onChange={handleFormChange}
-                    />
+                    <div className="col-span-6 sm:col-span-3 mt-2">
+                        <label
+                            htmlFor={"artistName"}
+                            className="block text-sm font-medium text-gray-700"
+                        >
+                            Name
+                        </label>
+                        <input
+                            type={"text"}
+                            name={"artistName"}
+                            id={"artistName"}
+                            value={creatorProfile.artistName}
+                            placeholder={"Your full name"}
+                            onChange={handleFormChange}
+                            className={
+                                "mt-1 p-2 focus:ring-main-100 focus:border-main-100 block w-full shadow-sm sm:text-sm border border-gray-300 rounded-md"
+                            }
+                        />
+                    </div>
 
-                    <InputBase
-                        label="Name"
-                        name={"artistName"}
-                        value={creatorProfile.artistName}
-                        onChange={handleFormChange}
-                    />
-
-                    <InputBase
-                        label="Bio"
-                        name={"description"}
-                        value={creatorProfile.description}
-                        onChange={handleFormChange}
-                        textArea
-                    />
-
+                    <div className="col-span-6 sm:col-span-3 mt-2">
+                        <label
+                            htmlFor={"description"}
+                            className="block text-sm font-medium text-gray-700"
+                        >
+                            Bio
+                        </label>
+                        <textarea
+                            type={"text"}
+                            name={"description"}
+                            id={"description"}
+                            value={creatorProfile.description}
+                            placeholder={"A bit about yourself"}
+                            onChange={handleFormChange}
+                            className={
+                                "mt-1 p-2 focus:ring-main-100 focus:border-main-100 block w-full shadow-sm sm:text-sm border border-gray-300 rounded-md"
+                            }
+                        />
+                    </div>
+                    
                     <ButtonUI
                         classAttrs={"my-6"}
                         onClick={saveCreatorProfile}
@@ -473,7 +512,14 @@ const Form = () => {
                     </ButtonUI>
                 </form>
             ) : (
-                <ButtonUI onClick={authenticate}>Authenticate</ButtonUI>
+                <>
+                    <div className="my-6 lg:my-6 container  mx-auto flex flex-col md:flex-row items-start md:items-center justify-between pb-4 border-b border-gray-300">
+                        <h3>Momentape is a Web3 company</h3>
+                    </div>
+                    <ButtonUI onClick={authenticate}>
+                        Connect your wallet
+                    </ButtonUI>
+                </>
             )}
         </Section>
     );
