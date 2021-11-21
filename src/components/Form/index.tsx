@@ -1,4 +1,4 @@
-import { useReducer, useState } from "react";
+import { useState } from "react";
 import * as React from "react";
 import { InputBase, ButtonImage, ButtonUI } from "../../components";
 import { Section } from "../../layout/Section";
@@ -39,17 +39,15 @@ const Form = () => {
             );
 
             const did = await client.authenticate(ethAuthProvider, true);
-            
+
             if (selfId) {
                 selfId.current = new SelfID({ client, did });
-                console.log(selfId.current)
                 const creator = await selfId.current.get("creator");
                 if (creator) {
                     setCreatorProfile({
                         ...creator,
                         id: did.id.replace("did:3:", ""),
                     });
-                    console.log(creatorProfile.id)
                 }
             }
 
@@ -65,6 +63,7 @@ const Form = () => {
         }
         setLoading(false);
     }
+
     async function saveCreatorProfile() {
         setLoading(true);
         if (selectedPFP) {
@@ -88,9 +87,10 @@ const Form = () => {
     async function uploadImageToIPFS(
         image: any,
         width: number,
-        height: number
+        height: number,
+        filename = "creatorImages"
     ) {
-        const imageFile = new File([image], "pfp");
+        const imageFile = new File([image], filename);
         const imageData = await uploadResizedImage(
             "https://ipfs.infura.io:5001/api/v0",
             imageFile.type,
@@ -178,12 +178,10 @@ const Form = () => {
             oAuth2.signIn();
         }
     }
-
     function handleFormChange(event: any) {
         const { name, value } = event.target;
         setCreatorProfile({ [name]: value });
     }
-
     const handleSubmit = (e: any) => {
         e.preventDefault();
     };
@@ -244,12 +242,36 @@ const Form = () => {
                     )}
 
                     {creatorProfile.pfp ? (
-                        <ButtonImage
-                            src={creatorProfile.pfp.replace(
-                                "ipfs://",
-                                "https://ipfs.infura.io/ipfs/"
-                            )}
-                        />
+                        <>
+                            <ButtonImage
+                                src={creatorProfile.pfp.replace(
+                                    "ipfs://",
+                                    "https://ipfs.infura.io/ipfs/"
+                                )}
+                            />
+                            <div className="flex text-sm text-gray-600">
+                                <label
+                                    htmlFor="pfp-upload"
+                                    className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
+                                >
+                                    <span>Change</span>
+                                    <input
+                                        id="pfp-upload"
+                                        name="pfp-upload"
+                                        type="file"
+                                        className="sr-only"
+                                        onChange={(e: any) => {
+                                            setCreatorProfile({
+                                                pfp: URL.createObjectURL(
+                                                    e.target.files[0]
+                                                ),
+                                            });
+                                            setSelectedPFP(e.target.files[0]);
+                                        }}
+                                    />
+                                </label>
+                            </div>
+                        </>
                     ) : (
                         <div>
                             <div className="my-6">
@@ -283,8 +305,16 @@ const Form = () => {
                                                     name="pfp-upload"
                                                     type="file"
                                                     className="sr-only"
-                                                    onChange={(e) => {
-                                                        setPfp(e);
+                                                    onChange={(e: any) => {
+                                                        setCreatorProfile({
+                                                            pfp: URL.createObjectURL(
+                                                                e.target
+                                                                    .files[0]
+                                                            ),
+                                                        });
+                                                        setSelectedPFP(
+                                                            e.target.files[0]
+                                                        );
                                                     }}
                                                 />
                                             </label>
@@ -302,14 +332,38 @@ const Form = () => {
                     )}
 
                     {creatorProfile.cover ? (
-                        <ButtonImage
-                            src={creatorProfile.cover?.replace(
-                                "ipfs://",
-                                "https://ipfs.infura.io/ipfs/"
-                            )}
-                            width={"300"}
-                            label={"Banner"}
-                        />
+                        <>
+                            <ButtonImage
+                                src={creatorProfile.cover?.replace(
+                                    "ipfs://",
+                                    "https://ipfs.infura.io/ipfs/"
+                                )}
+                                width={"300"}
+                                label={"Banner"}
+                            />
+                            <div className="flex text-sm text-gray-600">
+                                <label
+                                    htmlFor="cover-upload"
+                                    className="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
+                                >
+                                    <span>Change</span>
+                                    <input
+                                        id="cover-upload"
+                                        name="cover-upload"
+                                        type="file"
+                                        className="sr-only"
+                                        onChange={(e: any) => {
+                                            setCreatorProfile({
+                                                cover: URL.createObjectURL(
+                                                    e.target.files[0]
+                                                ),
+                                            });
+                                            setSelectedCover(e.target.files[0]);
+                                        }}
+                                    />
+                                </label>
+                            </div>
+                        </>
                     ) : (
                         <div>
                             <div className="my-6">
@@ -343,8 +397,16 @@ const Form = () => {
                                                     name="cover-upload"
                                                     type="file"
                                                     className="sr-only"
-                                                    onChange={(e) => {
-                                                        setCover(e);
+                                                    onChange={(e: any) => {
+                                                        setCreatorProfile({
+                                                            cover: URL.createObjectURL(
+                                                                e.target
+                                                                    .files[0]
+                                                            ),
+                                                        });
+                                                        setSelectedCover(
+                                                            e.target.files[0]
+                                                        );
                                                     }}
                                                 />
                                             </label>
@@ -388,7 +450,11 @@ const Form = () => {
                         onClick={saveCreatorProfile}
                         type={ButtonUIType.submit}
                     >
-                        {loading ? "Waiting for DiD... " : "Save"}
+                        {loading
+                            ? creatorProfile.id
+                                ? "Saving"
+                                : "Waiting for DiD... "
+                            : "Save"}
                     </ButtonUI>
                     <br />
                     <ButtonUI classAttrs={"my-6"}>
