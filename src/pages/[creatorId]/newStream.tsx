@@ -116,16 +116,19 @@ const NewStream = () => {
             setLoading(false);
             return console.error(lockAddress);
         }
-        fetch(process.env.NEXT_PUBLIC_API_URL + "/api/transferLockOwnership", {
-            headers: {
-                "Content-Type": "application/json",
-            },
-            method: "POST",
-            body: JSON.stringify({
-                creatorAddress: address,
-                lockAddress,
-            }),
-        });
+        await fetch(
+            process.env.NEXT_PUBLIC_API_URL + "/api/transferLockOwnership",
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                method: "POST",
+                body: JSON.stringify({
+                    creatorAddress: address,
+                    lockAddress,
+                }),
+            }
+        );
 
         const res = await fetch(
             process.env.NEXT_PUBLIC_API_URL + "/api/newStream",
