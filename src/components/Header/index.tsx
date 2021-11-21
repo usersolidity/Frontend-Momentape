@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
-// import * as React from "react";
+import Image from "next/image";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -100,6 +100,7 @@ export default function PrimarySearchAppBar() {
 
                             {selfId?.current ? (
                                 <Link
+                                    passHref
                                     href={{
                                         pathname: "/[creatorId]",
                                         query: {
@@ -118,7 +119,19 @@ export default function PrimarySearchAppBar() {
                                         aria-haspopup="true"
                                         color="inherit"
                                     >
-                                        <AccountCircle />
+                                        <Image
+                                            src={
+                                                creatorProfile.pfp
+                                                    ? creatorProfile.pfp.replace(
+                                                          "ipfs://",
+                                                          "https://ipfs.infura.io/ipfs/"
+                                                      )
+                                                    : `https://via.placeholder.com/96x96?text=PFP+Not+Set`
+                                            }
+                                            alt="Picture of the creator"
+                                            width={50}
+                                            height={50}
+                                        />
                                     </IconButton>
                                 </Link>
                             ) : (

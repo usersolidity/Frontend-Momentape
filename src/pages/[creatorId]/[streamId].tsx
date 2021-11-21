@@ -11,6 +11,7 @@ import modelAliases from "../../data/model.json";
 
 import { Base } from "../../templates/Base";
 import Video from "../../components/Video";
+import { ButtonUI } from "../../components";
 import { useAuthContext } from "../../utils/AuthContext";
 
 export const rinkeby = {
@@ -104,6 +105,7 @@ const StreamId = () => {
                 ...liveStream,
             });
             const unlockProtocol: any = await new Promise((resolve) => {
+                localStorage.removeItem("userInfo");
                 const element = document.getElementsByTagName("script")[0];
                 (window as any).unlockProtocolConfig = {
                     network: rinkeby.id,
@@ -143,14 +145,7 @@ const StreamId = () => {
                     console.log("unlockProtocol.authenticated", e.detail);
                 }
             );
-            const lockState = unlockProtocol.getState();
-            console.log("lockState", lockState);
-            if (lockState) {
-                setLockStatus(lockState);
-                if (lockState === "locked") {
-                    unlockProtocol && unlockProtocol.loadCheckoutModal();
-                }
-            }
+            setLockStatus(unlockProtocol.getState());
         }
 
         loadData();
@@ -158,19 +153,23 @@ const StreamId = () => {
 
     useEffect(() => {
         async function load() {
-            if (stream && address) {
-                const isLockManager = await web3Service.isLockManager(
-                    stream.lockAddress,
-                    address,
-                    rinkeby.id
-                );
-                console.log("isLockManager", isLockManager);
-                setIsLockManager(isLockManager);
+            if (stream) {
+                if (lockStatus) {
+                    let isLockManager = false;
+                    if (address) {
+                        isLockManager = await web3Service.isLockManager(
+                            stream.lockAddress,
+                            address,
+                            rinkeby.id
+                        );
+                        console.log("isLockManager", isLockManager);
+                        setIsLockManager(isLockManager);
+                    }
+                }
             }
         }
         load();
-        console.log(address, stream);
-    }, [address, stream]);
+    }, [address, stream, lockStatus]);
 
     const videoJsOptions = {
         // lookup the options in the docs for more options
@@ -190,6 +189,11 @@ const StreamId = () => {
     const handlePlayerReady = (player: any) => {
         playerRef.current = player;
     };
+
+    function unlock() {
+        (window as any).unlockProtocol &&
+            (window as any).unlockProtocol.loadCheckoutModal();
+    }
 
     return (
         <Base>
@@ -244,7 +248,15 @@ const StreamId = () => {
                         </li>
                     )}
                     {lockStatus === "locked" && !isLockManager ? (
-                        <li>Content is locked until you purchase the key</li>
+                        <li>
+                            {lockStatus ? (
+                                <ButtonUI onClick={unlock}>
+                                    Unlock the live stream
+                                </ButtonUI>
+                            ) : (
+                                "Loading..."
+                            )}
+                        </li>
                     ) : (
                         <li>
                             <Video

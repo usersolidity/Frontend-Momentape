@@ -2,6 +2,8 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useAuthContext, Creator } from "../../utils/AuthContext";
 
+import { Web3Service } from "@unlock-protocol/unlock-js";
+
 import { CeramicApi } from "@ceramicnetwork/common";
 import { Core } from "@self.id/core";
 import { TileLoader } from "@glazed/tile-loader";
@@ -11,11 +13,28 @@ import { Base } from "../../templates/Base";
 import { CreatorContent } from "../../components";
 import { ButtonUI } from "../../components";
 
+export const rinkeby = {
+    unlockAddress: "0xd8c88be5e8eb88e38e6ff5ce186d764676012b0b",
+    provider:
+        "https://eth-rinkeby.alchemyapi.io/v2/X_uPmnzfP1MG1VS3ddT-0bCecmpckTBS",
+    id: 4,
+};
+interface IWeb3Service {
+    [key: string]: any;
+    readOnlyProvider: string;
+    unlockAddress: string;
+    network: number;
+}
+const web3Service = new Web3Service({
+    [rinkeby.id]: rinkeby,
+} as unknown as IWeb3Service);
+
 type LiveStream = {
     id: string;
     name: string;
     date: string;
     cover: string;
+    keyPrice: string;
     livepeerId: string;
     createdAt: number;
     isActive: boolean;
@@ -30,7 +49,7 @@ const loader = new TileLoader({
 
 const Creator = () => {
     const router = useRouter();
-    const { creatorProfile } = useAuthContext();
+    const { address, creatorProfile } = useAuthContext();
     const [creator, setCreator] = useState<Creator>();
     const [liveStreams, setLiveStreams] = useState<LiveStream[]>([]);
 
@@ -67,17 +86,24 @@ const Creator = () => {
                 );
                 const liveStreams = await Promise.all(
                     liveStreamsDocs.map(async (liveStream: any) => {
-                        const res = await fetch(
-                            "https://livepeer.com/api/stream/" +
-                                liveStream.state.content.livepeerId,
-                            {
-                                headers: {
-                                    Authorization:
-                                        "Bearer fdf8f2c0-ba4d-4e4f-be66-7d40ad261a4e",
-                                },
-                            }
-                        );
+                        const [lock, res] = await Promise.all([
+                            web3Service.getLock(
+                                liveStream.state.content.lockAddress,
+                                rinkeby.id
+                            ),
+                            fetch(
+                                "https://livepeer.com/api/stream/" +
+                                    liveStream.state.content.livepeerId,
+                                {
+                                    headers: {
+                                        Authorization:
+                                            "Bearer fdf8f2c0-ba4d-4e4f-be66-7d40ad261a4e",
+                                    },
+                                }
+                            ),
+                        ]);
                         return {
+                            ...lock,
                             ...(await res.json()),
                             ...liveStream.state.content,
                             id: liveStream.id.toString(),
@@ -90,8 +116,6 @@ const Creator = () => {
 
         load();
     }, [creatorProfile, router.query]);
-
-    const ethAddress = "0xFE92A2bbA39CdF36b53Cab3C8e6cC61bE9710eF6";
 
     return (
         <Base>
@@ -117,6 +141,13 @@ const Creator = () => {
                             New stream
                         </ButtonUI>
                     </p>
+                    {creatorProfile.id === creator.id && (
+                        <p>
+                            <ButtonUI onClick={() => router.push("/creator")}>
+                                Edit profile
+                            </ButtonUI>
+                        </p>
+                    )}
                     <CreatorContent
                         imgPath={{
                             cover: creator.cover
@@ -133,7 +164,7 @@ const Creator = () => {
                                 : `https://via.placeholder.com/96x96?text=PFP+Not+Set`,
                         }}
                         name={creator.artistName || ""}
-                        ethAddress={ethAddress}
+                        ethAddress={address || ""}
                         content={liveStreams.map((liveStream) => ({
                             title: liveStream.name,
                             imgPath: liveStream.cover
@@ -142,7 +173,7 @@ const Creator = () => {
                                       "https://ipfs.infura.io/ipfs/"
                                   )
                                 : `https://via.placeholder.com/400x400?text=Stream+Cover+Not+Set`,
-                            price: 0,
+                            price: liveStream.keyPrice,
                             creatorId: creator.id || "",
                             streamId: liveStream.id,
                             date: liveStream.date,
