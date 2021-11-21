@@ -66,7 +66,7 @@ export default function PrimarySearchAppBar() {
                         });
                     }
                 }
-                if (router.route === '/') {
+                if (router.route === "/") {
                     router.push({
                         pathname: "/[creatorId]",
                         query: { creatorId: did.id.replace("did:3:", "") },
