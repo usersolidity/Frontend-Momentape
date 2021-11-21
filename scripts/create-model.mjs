@@ -106,7 +106,7 @@ const creatorSchemaID = await manager.createSchema("Creator", {
         },
         youtube: {
             type: "string",
-            maxLength: 50,
+            maxLength: 60,
         },
         pfp: {
             $ref: "#/definitions/IPFSUrl",
