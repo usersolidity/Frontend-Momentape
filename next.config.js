@@ -13,5 +13,6 @@ module.exports = withBundleAnalyzer({
     reactStrictMode: true,
     images: {
         domains: ["ipfs.infura.io", "via.placeholder.com"],
+        loader: "custom",
     },
 });
