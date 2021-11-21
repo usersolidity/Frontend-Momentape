@@ -134,7 +134,9 @@ const Creator = () => {
                         name={creator.artistName || ""}
                         ethAddress={address || ""}
                         creator={creatorProfile}
-                        editProfile={creatorProfile.id === creator.id ? true : false}
+                        editProfile={
+                            creatorProfile.id === creator.id ? true : false
+                        }
                         content={liveStreams.map((liveStream) => ({
                             title: liveStream.name,
                             imgPath: liveStream.cover

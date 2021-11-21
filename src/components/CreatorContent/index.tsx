@@ -4,7 +4,6 @@ import ContentItem, { IContentItemProps } from "./ContentItem";
 import * as React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faYoutube } from "@fortawesome/free-brands-svg-icons";
-import { useRouter } from "next/router";
 import Link from "next/link";
 type ICreatorContentProps = {
     imgPath: {
@@ -41,7 +40,15 @@ const CreatorContent: React.FunctionComponent<ICreatorContentProps> = ({
                             className="w-24 h-24 rounded object-cover"
                         />
                         {editProfile ? (
-                            <Link href={"/creator"}><p className={" hover:text-red-700 ml-4 text-gray-800 text-xs"}>Edit Profile</p></Link>
+                            <Link href={"/creator"}>
+                                <p
+                                    className={
+                                        " hover:text-red-700 ml-4 text-gray-800 text-xs"
+                                    }
+                                >
+                                    Edit Profile
+                                </p>
+                            </Link>
                         ) : (
                             " "
                         )}

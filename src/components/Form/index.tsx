@@ -422,7 +422,7 @@ const Form = () => {
                             </div>
                         </div>
                     )}
-                    
+
                     <div className="col-span-6 sm:col-span-3 mt-2">
                         <label
                             htmlFor={"youtube"}
@@ -471,7 +471,6 @@ const Form = () => {
                             Bio
                         </label>
                         <textarea
-                            type={"text"}
                             name={"description"}
                             id={"description"}
                             value={creatorProfile.description}
@@ -482,7 +481,7 @@ const Form = () => {
                             }
                         />
                     </div>
-                    
+
                     <ButtonUI
                         classAttrs={"my-6"}
                         onClick={saveCreatorProfile}
