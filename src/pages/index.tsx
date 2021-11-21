@@ -1,16 +1,17 @@
+import { useRouter } from "next/router";
+
 import { Base } from "../templates/Base";
 import { VerticalFeatures } from "../components";
-import ContentItem from "../components/CreatorContent/ContentItem";
+import { VariantType } from "../components/ButtonUI";
 import { Creator } from "../utils/AuthContext";
 
-import { CeramicApi } from "@ceramicnetwork/common";
-import { Core } from "@self.id/core";
-import { TileLoader } from "@glazed/tile-loader";
-import modelAliases from "../data/model.json";
+import { ButtonUI } from "../components";
 import { useEffect, useState } from "react";
 
 type LiveStream = {
     id: string;
+    streamId: string;
+    creatorId: string;
     name: string;
     date: string;
     cover: string;
@@ -19,15 +20,9 @@ type LiveStream = {
     createdAt: number;
     isActive: boolean;
 };
-const core = new Core({
-    ceramic: "testnet-clay-gateway",
-    model: modelAliases,
-});
-const loader = new TileLoader({
-    ceramic: core.ceramic as unknown as CeramicApi,
-});
 
 const Index = () => {
+    const router = useRouter();
     const [creators, setCreators] = useState<Creator[]>([]);
     const [streams, setStreams] = useState<LiveStream[]>([]);
     useEffect(() => {
@@ -53,16 +48,45 @@ const Index = () => {
                 <p>Welcome into your new livestream word</p>
 
                 <div className="flex flex-wrap">
-                    {creators.map((item: any, i: number) => (
-                        <ContentItem
-                            imgPath={item.imgPath}
-                            title={item.title}
-                            price={item.price}
-                            streamId={item.streamId}
-                            date={item.date}
-                            creatorId={item.creatorId}
-                            key={i}
-                        />
+                    {creators.map((creator, i: number) => (
+                        <div className="w-1/4 p-2" key={i}>
+                            <img
+                                src={
+                                    creator.pfp
+                                        ? creator.pfp.replace(
+                                              "ipfs://",
+                                              "https://ipfs.infura.io/ipfs/"
+                                          )
+                                        : `https://via.placeholder.com/96x96?text=PFP+Not+Set`
+                                }
+                                alt={creator.artistName}
+                                style={{ width: "100%", height: "200px" }}
+                                className="object-cover"
+                            />
+                            <div className="bg-main-100 p-4">
+                                <div className="flex justify-between mb-3">
+                                    <p className="text-white uppercase font-light">
+                                        {creator.artistName}
+                                    </p>
+                                </div>
+                                <p className="text-white font-light">
+                                    {creator.description}
+                                </p>
+                                <ButtonUI
+                                    variant={VariantType.outlinedWhite}
+                                    onClick={() =>
+                                        router.push({
+                                            pathname: "/[creatorId]",
+                                            query: {
+                                                creatorId: creator.id,
+                                            },
+                                        })
+                                    }
+                                >
+                                    Go
+                                </ButtonUI>
+                            </div>
+                        </div>
                     ))}
                 </div>
             </div>
@@ -71,16 +95,47 @@ const Index = () => {
                 <p>What will you find here ?</p>
 
                 <div className="flex flex-wrap">
-                    {streams.map((item: any, i: number) => (
-                        <ContentItem
-                            imgPath={item.imgPath}
-                            title={item.title}
-                            price={item.price}
-                            streamId={item.streamId}
-                            date={item.date}
-                            creatorId={item.creatorId}
-                            key={i}
-                        />
+                    {streams.map((stream, i: number) => (
+                        <div className="w-1/4 p-2" key={i}>
+                            <img
+                                src={
+                                    stream.cover
+                                        ? stream.cover.replace(
+                                              "ipfs://",
+                                              "https://ipfs.infura.io/ipfs/"
+                                          )
+                                        : `https://via.placeholder.com/400x400?text=Stream+Cover+Not+Set`
+                                }
+                                alt={stream.name}
+                                style={{ width: "100%", height: "200px" }}
+                                className="object-cover"
+                            />
+                            <div className="bg-main-100 p-4">
+                                <div className="flex justify-between mb-3">
+                                    <p className="text-white uppercase font-light">
+                                        {stream.name}
+                                    </p>
+                                </div>
+                                <p className="text-white font-light">
+                                    Date:{" "}
+                                    {new Date(stream.date).toLocaleString()}
+                                </p>
+                                <ButtonUI
+                                    variant={VariantType.outlinedWhite}
+                                    onClick={() =>
+                                        router.push({
+                                            pathname: "/[creatorId]/[streamId]",
+                                            query: {
+                                                creatorId: stream.creatorId,
+                                                streamId: stream.streamId,
+                                            },
+                                        })
+                                    }
+                                >
+                                    Go
+                                </ButtonUI>
+                            </div>
+                        </div>
                     ))}
                 </div>
             </div>

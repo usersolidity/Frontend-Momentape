@@ -48,6 +48,7 @@ export type LiveStream = {
     lockAddress: string;
     maxNumberOfKeys: number;
     balance: string;
+    streamKey: string;
 };
 const core = new Core({
     ceramic: "testnet-clay-gateway",
@@ -242,6 +243,9 @@ const StreamId = () => {
                         <li>
                             <strong>Purchased: {stream.balance} ETH</strong>
                         </li>
+                    )}
+                    {isLockManager && (
+                        <li>Stream key for OBS: {stream.streamKey}</li>
                     )}
                     {lockStatus === "locked" && !isLockManager ? (
                         <li>

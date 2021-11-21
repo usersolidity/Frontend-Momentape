@@ -83,6 +83,13 @@ const Form = () => {
                 ...creatorProfile,
                 id: selfId.current.id.replace("did:3:", ""),
             });
+            await fetch(process.env.NEXT_PUBLIC_API_URL + "/api/newCreator", {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                method: "POST",
+                body: JSON.stringify(selfId.current.id),
+            });
         }
         setLoading(false);
     }
@@ -425,7 +432,7 @@ const Form = () => {
                             </div>
                         </div>
                     )}
-                    
+
                     <div className="col-span-6 sm:col-span-3 mt-2">
                         <label
                             htmlFor={"youtube"}
@@ -474,7 +481,6 @@ const Form = () => {
                             Bio
                         </label>
                         <textarea
-                            type={"text"}
                             name={"description"}
                             id={"description"}
                             value={creatorProfile.description}
@@ -485,7 +491,7 @@ const Form = () => {
                             }
                         />
                     </div>
-                    
+
                     <ButtonUI
                         classAttrs={"my-6"}
                         onClick={saveCreatorProfile}
