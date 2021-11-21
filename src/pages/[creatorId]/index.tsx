@@ -11,7 +11,6 @@ import modelAliases from "../../data/model.json";
 
 import { Base } from "../../templates/Base";
 import { CreatorContent } from "../../components";
-import { ButtonUI } from "../../components";
 import * as React from "react";
 
 export const rinkeby = {
@@ -52,6 +51,7 @@ const Creator = () => {
     const router = useRouter();
     const { address, creatorProfile } = useAuthContext();
     const [creator, setCreator] = useState<Creator>();
+    const [loadingStreams, setLoadingStreams] = useState(true);
     const [liveStreams, setLiveStreams] = useState<LiveStream[]>([]);
 
     useEffect(() => {
@@ -72,6 +72,7 @@ const Creator = () => {
                 });
             }
 
+            setLoadingStreams(true);
             Promise.all([
                 core.get("cryptoAccounts", DID),
                 core.get("contents", DID),
@@ -107,6 +108,7 @@ const Creator = () => {
                         };
                     })
                 );
+                setLoadingStreams(false);
                 setLiveStreams(liveStreams);
             });
         }
@@ -135,10 +137,11 @@ const Creator = () => {
                         }}
                         name={creator.artistName || ""}
                         ethAddress={address || ""}
-                        creator={creatorProfile}
+                        creator={creator}
                         editProfile={
                             creatorProfile.id === creator.id ? true : false
                         }
+                        loadingStreams={loadingStreams}
                         content={liveStreams.map((liveStream) => ({
                             title: liveStream.name,
                             imgPath: liveStream.cover
@@ -152,21 +155,7 @@ const Creator = () => {
                             streamId: liveStream.id,
                             date: liveStream.date,
                         }))}
-                    />{" "}
-                    <div className={"mx-20"}>
-                        <ButtonUI
-                            onClick={() =>
-                                router.push({
-                                    pathname: "/[creatorId]/newStream",
-                                    query: {
-                                        creatorId: creator.id,
-                                    },
-                                })
-                            }
-                        >
-                            New stream
-                        </ButtonUI>
-                    </div>
+                    />
                 </div>
             ) : (
                 "Loading..."

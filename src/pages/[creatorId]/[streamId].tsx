@@ -222,31 +222,38 @@ const StreamId = () => {
                             width="50"
                         />
                     </li>
-                    <li>Livepeer playback ID: {stream.playbackId}</li>
+                    {isLockManager && (
+                        <>
+                            <li>
+                                <strong>Purchased: {stream.balance} ETH</strong>
+                            </li>
+                            <li>
+                                <strong>
+                                    Stream key for OBS: {stream.streamKey}
+                                </strong>
+                            </li>
+                        </>
+                    )}
                     <li>Created at: {stream.createdAt}</li>
                     <li>Is active: {stream.isActive.toString()}</li>
                     <li>Name: {stream.name}</li>
                     <li>Description: {stream.description}</li>
                     <li>
                         Cover:
-                        <img
-                            src={stream.cover?.replace(
-                                "ipfs://",
-                                "https://ipfs.infura.io/ipfs/"
-                            )}
-                            width="640"
-                        />
+                        {stream.cover ? (
+                            <img
+                                src={stream.cover.replace(
+                                    "ipfs://",
+                                    "https://ipfs.infura.io/ipfs/"
+                                )}
+                                width="640"
+                            />
+                        ) : (
+                            " No cover"
+                        )}
                     </li>
                     <li>Price: {stream.keyPrice} ETH</li>
                     <li>Maximum keys: {stream.maxNumberOfKeys}</li>
-                    {isLockManager && (
-                        <li>
-                            <strong>Purchased: {stream.balance} ETH</strong>
-                        </li>
-                    )}
-                    {isLockManager && (
-                        <li>Stream key for OBS: {stream.streamKey}</li>
-                    )}
                     {lockStatus === "locked" && !isLockManager ? (
                         <li>
                             {lockStatus ? (

@@ -1,11 +1,11 @@
 import styles from "./CreatorContent.module.css";
-import _ from "lodash";
 import ContentItem, { IContentItemProps } from "./ContentItem";
 import * as React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faYoutube } from "@fortawesome/free-brands-svg-icons";
-import { useRouter } from "next/router";
+import { ButtonUI } from "../../components";
 import Link from "next/link";
+import { useRouter } from "next/router";
 type ICreatorContentProps = {
     imgPath: {
         profile: string;
@@ -16,6 +16,7 @@ type ICreatorContentProps = {
     content: IContentItemProps[];
     creator: any;
     editProfile: boolean;
+    loadingStreams: boolean;
 };
 
 const CreatorContent: React.FunctionComponent<ICreatorContentProps> = ({
@@ -25,7 +26,9 @@ const CreatorContent: React.FunctionComponent<ICreatorContentProps> = ({
     content,
     creator,
     editProfile,
+    loadingStreams,
 }) => {
+    const router = useRouter();
     return (
         <>
             <div
@@ -41,7 +44,15 @@ const CreatorContent: React.FunctionComponent<ICreatorContentProps> = ({
                             className="w-24 h-24 rounded object-cover"
                         />
                         {editProfile ? (
-                            <Link href={"/creator"}><p className={" hover:text-red-700 ml-4 text-gray-800 text-xs"}>Edit Profile</p></Link>
+                            <Link href={"/creator"}>
+                                <p
+                                    className={
+                                        " hover:text-red-700 ml-4 text-gray-800 text-xs"
+                                    }
+                                >
+                                    Edit Profile
+                                </p>
+                            </Link>
                         ) : (
                             " "
                         )}
@@ -59,28 +70,47 @@ const CreatorContent: React.FunctionComponent<ICreatorContentProps> = ({
                             </a>
                         </span>
                         <span className="text-gray-800 block ml-4">
-                            {_.truncate(ethAddress, {
-                                length: 14,
-                                separator: " ",
-                            })}
+                            {ethAddress}
                         </span>
                         <span className="text-gray-800 block ml-4">
                             <p>{creator.description}</p>
                         </span>
                     </div>
                 </div>
+                {editProfile && (
+                    <div className={"my-5"}>
+                        <p>
+                            <ButtonUI
+                                onClick={() =>
+                                    router.push({
+                                        pathname: "/[creatorId]/newStream",
+                                        query: {
+                                            creatorId: creator.id,
+                                        },
+                                    })
+                                }
+                            >
+                                New stream
+                            </ButtonUI>
+                        </p>
+                    </div>
+                )}
                 <div className="flex flex-wrap">
-                    {content.map((item, i: number) => (
-                        <ContentItem
-                            imgPath={item.imgPath}
-                            title={item.title}
-                            price={item.price}
-                            streamId={item.streamId}
-                            date={item.date}
-                            creatorId={item.creatorId}
-                            key={i}
-                        />
-                    ))}
+                    {loadingStreams
+                        ? "Loading streams"
+                        : content.length
+                        ? content.map((item, i: number) => (
+                              <ContentItem
+                                  imgPath={item.imgPath}
+                                  title={item.title}
+                                  price={item.price}
+                                  streamId={item.streamId}
+                                  date={item.date}
+                                  creatorId={item.creatorId}
+                                  key={i}
+                              />
+                          ))
+                        : "No streams yet"}
                 </div>
             </div>
         </>
