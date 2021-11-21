@@ -12,6 +12,7 @@ import modelAliases from "../../data/model.json";
 import { Base } from "../../templates/Base";
 import { CreatorContent } from "../../components";
 import { ButtonUI } from "../../components";
+import * as React from "react";
 
 export const rinkeby = {
     unlockAddress: "0xd8c88be5e8eb88e38e6ff5ce186d764676012b0b",
@@ -117,37 +118,6 @@ const Creator = () => {
         <Base>
             {creator ? (
                 <div>
-                    <p>
-                        <strong>Bio: {creator.description}</strong>
-                    </p>
-                    <p>
-                        <strong>YouTube: {creator.youtube}</strong>
-                    </p>
-                    {creatorProfile.id === creator.id && (
-                        <>
-                            <p>
-                                <ButtonUI
-                                    onClick={() =>
-                                        router.push({
-                                            pathname: "/[creatorId]/newStream",
-                                            query: {
-                                                creatorId: creator.id,
-                                            },
-                                        })
-                                    }
-                                >
-                                    New stream
-                                </ButtonUI>
-                            </p>
-                            <p>
-                                <ButtonUI
-                                    onClick={() => router.push("/creator")}
-                                >
-                                    Edit profile
-                                </ButtonUI>
-                            </p>
-                        </>
-                    )}
                     <CreatorContent
                         imgPath={{
                             cover: creator.cover
@@ -165,6 +135,8 @@ const Creator = () => {
                         }}
                         name={creator.artistName || ""}
                         ethAddress={address || ""}
+                        creator={creatorProfile}
+                        editProfile={creatorProfile.id === creator.id ? true : false}
                         content={liveStreams.map((liveStream) => ({
                             title: liveStream.name,
                             imgPath: liveStream.cover
@@ -179,6 +151,20 @@ const Creator = () => {
                             date: liveStream.date,
                         }))}
                     />{" "}
+                    <div className={"mx-20"}>
+                        <ButtonUI
+                            onClick={() =>
+                                router.push({
+                                    pathname: "/[creatorId]/newStream",
+                                    query: {
+                                        creatorId: creator.id,
+                                    },
+                                })
+                            }
+                        >
+                            New stream
+                        </ButtonUI>
+                    </div>
                 </div>
             ) : (
                 "Loading..."

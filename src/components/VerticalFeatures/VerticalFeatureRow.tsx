@@ -8,14 +8,12 @@ type IVerticalFeatureRowProps = {
         path: string;
         alt: string;
     };
-    reverse?: boolean;
 };
 
 const VerticalFeatureRow: React.FunctionComponent<IVerticalFeatureRowProps> = ({
     title,
     description,
     image,
-    reverse,
     children,
 }) => {
     const verticalFeatureClass = className(
@@ -24,9 +22,7 @@ const VerticalFeatureRow: React.FunctionComponent<IVerticalFeatureRowProps> = ({
         "flex",
         "flex-wrap",
         "items-center",
-        {
-            "flex-row-reverse": reverse,
-        }
+        "flex-col"
     );
 
     const router = useRouter();
