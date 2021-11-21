@@ -1,4 +1,4 @@
-import styles from "./CreatorContent.module.css";
+// import styles from "./CreatorContent.module.css";
 import { useRouter } from "next/router";
 import { ButtonUI } from "../../components";
 import { VariantType } from "../ButtonUI";
@@ -33,7 +33,9 @@ const ContentItem: React.FunctionComponent<IContentItemProps> = ({
                     <p className="text-white uppercase font-light">{title}</p>
                     <p className="text-white uppercase font-light">{price}$</p>
                 </div>
-                <p className="text-white font-light">{new Date(date).toLocaleString()}</p>
+                <p className="text-white font-light">
+                    {new Date(date).toLocaleString()}
+                </p>
                 <ButtonUI
                     variant={VariantType.outlinedWhite}
                     onClick={() =>
