@@ -77,8 +77,11 @@ const Form = () => {
             creatorProfile.cover = cover;
             setSelectedCover(null);
         }
-        if (selfId) {
-            await selfId.current?.set("creator", creatorProfile);
+        if (selfId?.current) {
+            await selfId.current.set("creator", {
+                ...creatorProfile,
+                id: selfId.current.id.replace("did:3:", ""),
+            });
         }
         setLoading(false);
     }
@@ -206,11 +209,11 @@ const Form = () => {
                         onChange={() => {}}
                     />
 
-                    {creatorProfile.id ? (
+                    {selfId?.current ? (
                         <div>
                             <InputBase
                                 label="DID"
-                                value={creatorProfile.id}
+                                value={selfId?.current.id}
                                 disabled
                                 onChange={() => {}}
                             />

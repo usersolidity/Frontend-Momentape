@@ -35,6 +35,11 @@ export default function PrimarySearchAppBar() {
                 query: { creatorId: creatorProfile.id },
             });
             return;
+        } else if (selfId?.current) {
+            router.push({
+                pathname: "/creator",
+            });
+            return;
         }
         setLoading(true);
         const [[address], { EthereumAuthProvider, SelfID, WebClient }] =
@@ -63,17 +68,23 @@ export default function PrimarySearchAppBar() {
                             ...creator,
                             id: did.id.replace("did:3:", ""),
                         });
+                        if (router.route === "/") {
+                            router.push({
+                                pathname: "/[creatorId]",
+                                query: {
+                                    creatorId: did.id.replace("did:3:", ""),
+                                },
+                            });
+                        }
+                    } else {
+                        router.push({
+                            pathname: "/creator",
+                        });
                     }
-                }
-                if (router.route === "/") {
-                    router.push({
-                        pathname: "/[creatorId]",
-                        query: { creatorId: did.id.replace("did:3:", "") },
-                    });
                 }
             } else {
                 router.push({
-                    pathname: "/newCreator",
+                    pathname: "/creator",
                 });
             }
         }
@@ -97,17 +108,13 @@ export default function PrimarySearchAppBar() {
                 </Badge>
               </IconButton> */}
 
-                            {selfId?.current ? (
+                            {creatorProfile.id ? (
                                 <Link
                                     passHref
                                     href={{
                                         pathname: "/[creatorId]",
                                         query: {
-                                            creatorId:
-                                                selfId.current?.id.replace(
-                                                    "did:3:",
-                                                    ""
-                                                ),
+                                            creatorId: creatorProfile.id,
                                         },
                                     }}
                                 >

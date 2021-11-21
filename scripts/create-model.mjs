@@ -134,8 +134,6 @@ const creatorsSchemaID = await manager.createSchema("Creators", {
             items: {
                 type: "string",
                 title: "Creator DID",
-                $comment: `cip19:ref:${manager.getSchemaURL(creatorSchemaID)}`,
-                pattern: "^ceramic://.+(\\?version=.+)?",
                 maxLength: 150,
             },
         },

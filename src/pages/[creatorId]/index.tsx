@@ -61,6 +61,7 @@ const Creator = () => {
 
         async function load() {
             const DID = await core.toDID("did:3:" + creatorId);
+            console.log(creatorId, creatorProfile.id);
             if (creatorId === creatorProfile.id) {
                 setCreator(creatorProfile);
             } else {
@@ -92,7 +93,8 @@ const Creator = () => {
                                 rinkeby.id
                             ),
                             fetch(
-                                "https://momentape-api.vercel.app/api/getStream?livepeerId=" +
+                                process.env.NEXT_PUBLIC_API_URL +
+                                    "/api/getStream?livepeerId=" +
                                     liveStream.state.content.livepeerId
                             ),
                         ]);

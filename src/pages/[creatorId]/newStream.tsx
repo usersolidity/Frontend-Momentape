@@ -97,7 +97,7 @@ const NewStream = () => {
             setSelectedCover(null);
         }
         const response = await fetch(
-            "https://momentape-api.vercel.app/api/createLock",
+            process.env.NEXT_PUBLIC_API_URL + "/api/createLock",
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -116,7 +116,7 @@ const NewStream = () => {
             setLoading(false);
             return console.error(lockAddress);
         }
-        fetch("https://momentape-api.vercel.app/api/transferLockOwnership", {
+        fetch(process.env.NEXT_PUBLIC_API_URL + "/api/transferLockOwnership", {
             headers: {
                 "Content-Type": "application/json",
             },
@@ -128,7 +128,7 @@ const NewStream = () => {
         });
 
         const res = await fetch(
-            "https://momentape-api.vercel.app/api/newStream",
+            process.env.NEXT_PUBLIC_API_URL + "/api/newStream",
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -138,7 +138,7 @@ const NewStream = () => {
             }
         );
         const livepeerStream = await res.json();
-        if (!response.ok) {
+        if (!res.ok) {
             setLoading(false);
             return console.error(livepeerStream);
         }

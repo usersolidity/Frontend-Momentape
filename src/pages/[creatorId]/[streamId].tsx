@@ -88,7 +88,8 @@ const StreamId = () => {
                 id: creatorId,
             });
             const res = await fetch(
-                "https://momentape-api.vercel.app/api/getStream?livepeerId=" +
+                process.env.NEXT_PUBLIC_API_URL +
+                    "/api/getStream?livepeerId=" +
                     liveStream.livepeerId
             );
             const livepeerStream = await res.json();
