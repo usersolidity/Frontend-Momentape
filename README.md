@@ -6,7 +6,7 @@ You will find here the ressources to achieve this :)
 
 
 ## Table of Contents
-* [General Info](#general-information)
+* [General Information](#general-information)
 * [User Journeys](#user-journeys)
 * [Data flows](#data-flows)
 * [Solution Design](#solution-design)
@@ -97,12 +97,10 @@ To do:
 
 
 ## Acknowledgements
-Give credit here.
 - This project was inspired by all the content creators in the world :)
 - This project is online on [website](https://momentape.eth.limo/).
 - Many thanks to all the ETHGLobal team for the organization and all the sponsors.
 
 
-## Contact
-Created by [@flynerdpl](https://www.flynerd.pl/) - feel free to contact me!
+
 
