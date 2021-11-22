@@ -40,11 +40,12 @@ Fans directly go to a creator's page to discorver his/her universe, or they can 
 ![Userjourney Schema](./public/assets/images/Userjourneyschema.png)
 
 ## Data Flows
-![Data flows1](./public/assets/images/Dataflows1.png)
-![Data flows2](./public/assets/images/Dataflows2.png)
-![Data flows3](./public/assets/images/Dataflows3.png)
-![Data flows3](./public/assets/images/Dataflows4.png)
-![Data flows3](./public/assets/images/Dataflows5.png)
+
+
+![Data flows1](./public/assets/images/Dataflows1.png)   | ![Data flows2](./public/assets/images/Dataflows2.png)
+------------- | -------------
+![Data flows3](./public/assets/images/Dataflows3.png)| ![Data flows4](./public/assets/images/Dataflows4.png)
+![Data flows5](./public/assets/images/Dataflows5.png)  |
 
 ## Solution Design
 ![Momentape Structure](./public/assets/images/Momentapestructure.png)
