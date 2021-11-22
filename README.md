@@ -1,4 +1,4 @@
-# Project Name
+# Momentape
 
 Momentape is a web3 platform that brings artists closer to their fans. To succeed it, we will develop an application with 2 solutions inside : NFT Marketplace & Live streaming platform.
 For the ETHGlobal hackathon, we focus on the live streaming platform.
@@ -25,8 +25,8 @@ You will find here the ressources to achieve this :)
 - Team
   - Leo Filipetti : Product Manager / [Linkedin](https://www.linkedin.com/in/leo-filipetti/)
   - Luca Perret :  Lead tech / [Github](https://github.com/lucaperret)
-  - Nijat hasanli : Developer [Github](https://github.com/nhasanli)
-  - Jean Dumas : Product Manager [Linkedin](www.linkedin.com/in/jean-dumas-5b32ab56)
+  - Nijat hasanli : Developer /  [Github](https://github.com/nhasanli)
+  - Jean Dumas : Product Manager /[Linkedin](www.linkedin.com/in/jean-dumas-5b32ab56)
 
 - Project:
 The project is made on React with Typescript mostly. We used several sponsors technologies : Ceramic, ENS, Livepeer, IPFS and Unlock. We deployed the website on Fleek.
@@ -73,8 +73,20 @@ Fans directly go to a creator's page to discorver his/her universe, or they can 
 |![Momentape Figma](./public/assets/images/Creatorpage.png)  | ![Momentape Figma](./public/assets/images/EditStream.png)|
 
 ## Setup
-...
 
+### Front-end
+
+1) Clone this repository
+2) `npm install`
+3) `npm run dev`
+
+### Back-end APIs
+
+1) Clone the [momentape-api](https://github.com/lucaperret/momentape-api) repository
+2) `npm install -g vercel` + `npm install`
+3) Generate a seed from your terminal: `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`
+4) Create a `.env` file with `SEED=YOUR_GENERATE_SEED` and an account private key `PV_KEY=YOUR_ACCOUNT_KEY`
+5) `vercel dev`
 
 ## Project Status
 Project is: _in progress_.It's born during the WEB3JAM hackathon.
@@ -88,11 +100,13 @@ Room for improvement:
 - Frontend integration and design
 - LivePeer stream URL proxied
 - Use Fluence vs Vercel for decentralized API
+- Enabling credit cards payment to Unlock contents
 
 To do:
 - Edit Stream info
 - Creator funds withdraw
 - Mainnet deployment (Ceramic, Unlock)
+- Momentape's fee
 - NFT marketplace
 
 
