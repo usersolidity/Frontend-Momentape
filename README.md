@@ -1,6 +1,9 @@
 # Project Name
-> Outline a brief description of your project.
-> Live demo [_here_](https://www.example.com). <!-- If you have the project hosted somewhere, include the link here. -->
+
+Momentape is a web3 platform that brings artists closer to their fans. To succeed it, we will developp an application with 2 solutions inside : Nft Marketplace & Livestream platform.
+For the Eth global hackathon, we focus on the livestream platform.
+You will find here the ressources to achieve this :)
+
 
 ## Table of Contents
 * [General Info](#general-information)
@@ -17,17 +20,33 @@
 
 
 ## General Information
-- Provide general information about your project here.
-- What problem does it (intend to) solve?
-- What is the purpose of your project?
-- Why did you undertake it?
+
+- Project:
+The project is made on React with Typescript mostly. We used several sponsors technologies : Ceramic, ENS, Livepeer, IPFS/Filecoin and Unlock. We deployed the website on Fleek. The sponsors made us re think the original idea that you can find in the "Long Description". It was supposed to be a NFT marketplace, but for the hackathon it's now a live streaming platform, in the web3, for creators (YouTubers, Instagramers etc.)
+
+- Userjourney Creators :
+They can connect their wallet. Then, creators can edit their profile (cover pic, bio, links, etc.) with data imported from YouTube. They can prepare their next stream => price, date, time etc.
+- Userjourney Users :
+They can connect their wallet. Then, users can directly go to a creator's page to discorver his/her universe, or they can also directly watch one of the next livestream drops. Once users are on a stream page, they will have to pay to unlock the access to the artist live.
+- Userjourney Schema :
+![Userjourney Schema](.public/assets/images/Userjourneyschema.png)
+
 <!-- You don't have to answer all the questions - just the ones relevant to your project. -->
 
 
 ## Technologies Used
-- Tech 1 - version 1.0
-- Tech 2 - version 2.0
-- Tech 3 - version 3.0
+- Front-end: https://nextjs.org/
+- Serverless APIs: https://vercel.com/
+- Decentralized Web Hosting: https://fleek.co/
+- Decentralized Domain (https://momentape.eth.limo/): https://ens.domains/
+- Decentralized DNS: https://eth.limo/
+- Decentralized Datastore, Authentication (3ID Connect) & Identity (Self.Id): https://ceramic.network/
+- Decentralized asset hosting (via Self.Id's image-utils): https://ipfs.io/
+- Decentralized live streaming platform: https://livepeer.com/
+- Decentralized payment (Unlock.js & Paywall): https://unlock-protocol.com/
+- Blockchain RPC: https://www.alchemy.com/
+- YouTube APIs: https://developers.google.com/youtube/v3
+
 
 
 ## Features
@@ -38,7 +57,14 @@ List the ready features here:
 
 
 ## Screenshots
-![Example screenshot](./img/screenshot.png)
+- Momentape Structure
+![Momentape Structure](./public/assets/images/Momentapestructure.png)
+- Momentape Figma
+![Momentape Figma](./public/assets/images/Creatorpage.png)
+![Momentape Figma](./public/assets/images/EditStream.png)
+![Momentape Figma](./public/assets/images/Homepage1.png)
+![Momentape Figma](.public/assets/images/Homepage2.png)
+
 <!-- If you have screenshots you'd like to share, include them here. -->
 
 
@@ -56,14 +82,15 @@ Provide various use cases and code examples here.
 
 
 ## Project Status
-Project is: _in progress_ / _complete_ / _no longer being worked on_. If you are no longer working on it, provide reasons why.
+Project is: _in progress_.The project is still in progress, it's born during the WEB3JAM hackathon.
+We will launch our MVP during the first weeks of 2022.
 
 
 ## Room for Improvement
 Include areas you believe need improvement / could be improved. Also add TODOs for future development.
 
 Room for improvement:
-- Improvement to be done 1
+- Frontend
 - Improvement to be done 2
 
 To do:
@@ -73,9 +100,9 @@ To do:
 
 ## Acknowledgements
 Give credit here.
-- This project was inspired by...
-- This project was based on [this tutorial](https://www.example.com).
-- Many thanks to...
+- This project was inspired by all the content creators in the world :)
+- This project is online on [website](https://momentape.eth.limo/).
+- Many thanks to all the team, ETHGLobal for the organization and all the sponsors.
 
 
 ## Contact
